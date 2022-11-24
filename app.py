@@ -150,7 +150,7 @@ def getAttractionsInformation():
 		if(keyword ==""):
 			sql="select * from taipeiAttractionsData"
 			mycursor.execute(sql)
-		for i in range(int(page)):
+		for i in range(int(page)): 
 			findInDataBase=mycursor.fetchmany(12)
 		mycursor.close()
 		connector.close()
@@ -227,18 +227,18 @@ def getCategoriesList():
 		for i in catList:
 			resultCatList.append(i[0])
 		resp={"data":resultCatList}
-		return jsonify(resp)
+		return jsonify(resp),200
 	except:
 		mycursor.close()
 		connector.close()
-		return jsonify({"error":True,"message":"伺服器錯誤"})
-
-	
+		return jsonify({"error":True,"message":"伺服器錯誤"}),500
 
 
-
+#
 
 
 
 
-app.run(port=3000)
+
+
+app.run("0.0.0.0",debug=True)
