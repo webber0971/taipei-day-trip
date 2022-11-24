@@ -36,6 +36,7 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
+<<<<<<< HEAD
 # 註冊一個新的會員
 @app.post("/api/user")
 def signNewMember():
@@ -241,4 +242,6 @@ def getCategoriesList():
 
 
 
+=======
+>>>>>>> c55c0a33fb63913d8b4cfc5cf5052439eaf13f66
 app.run(port=3000)
