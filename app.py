@@ -134,24 +134,25 @@ def logout():
 #取得景點資料列表
 @app.get("/api/attractions/")
 def getAttractionsInformation():
-	page=request.args.get("page",1)
+	page=request.args.get("page",0)
 	keyword=request.args.get("keyword","")
 	print("page = " + str(page))
 	print("keyword = "+keyword)
 	connector=mydbPool.get_connection()
 	mycursor=connector.cursor()
 	mycursor.execute("use taipeiAttractions")
+	first=int(page)*12
+	dataCounts=12
 	try:
 		if(keyword != ""):
-			sql="select * from taipeiAttractionsData where cat=%s or name like %s "
+			sql="select * from taipeiAttractionsData where cat=%s or name like %s limit %s,%s"
 			catKeyword=keyword
 			nameKeyword ="%" + keyword + "%"
-			mycursor.execute(sql,(catKeyword,nameKeyword))
+			mycursor.execute(sql,(catKeyword,nameKeyword,first,dataCounts))
 		if(keyword ==""):
-			sql="select * from taipeiAttractionsData"
-			mycursor.execute(sql)
-		for i in range(int(page)): 
-			findInDataBase=mycursor.fetchmany(12)
+			sql="select * from taipeiAttractionsData limit %s,%s"
+			mycursor.execute(sql,(first,dataCounts))
+		findInDataBase=mycursor.fetchall()
 		mycursor.close()
 		connector.close()
 		print(len(findInDataBase))
