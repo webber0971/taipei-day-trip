@@ -36,6 +36,8 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
+<<<<<<<<< Temporary merge branch 1
+=========
 # 註冊一個新的會員
 @app.post("/api/user")
 def signNewMember():
@@ -232,13 +234,5 @@ def getCategoriesList():
 		mycursor.close()
 		connector.close()
 		return jsonify({"error":True,"message":"伺服器錯誤"}),500
-
-
-#
-
-
-
-
-
 
 app.run("0.0.0.0",debug=True)
