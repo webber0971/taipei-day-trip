@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/index.css">
+    <script>
+        // 連線初始化資料
+        function init(){
+            buildCatList()
+            setListenerToLoadMore()     
+            addListenerOnSearchInput()
+        }
+        //用官間字搜尋，並更新內容
+        function refreshWithKeyWord(){
+            let searchButton = window.document.getElementById("searchButton")
+            searchButton.addEventListener("click",sendSearchRequest)
+            function sendSearchRequest(){
+                page=0
+                let information=window.document.getElementById("information")
+                information.innerHTML=""
+                let searchString=window.document.getElementById("searchString")
+                console.log(searchString.value)
+
+
+            }
+        }
+        //監聽是否滑到頁面最底端，如果到最底部，且不識最後一頁，則送出請求。
+        function setListenerToLoadMore(){
+            let page=0
+            let searchKeyWord=""
+            let isLastPage=false
+            let isFirst=true
+
+            refreshWithKeyWord()
+            // const root=document.querySelector('#body');
+            const options={
+                // root,
+                threshold:[0.8] //監聽的物件顯示80%
+            }
+            const callback = (entries, observer) => {
+                entries.forEach(entry => {
+                // Do something...
+                    if(entry.isIntersecting && entry.target && !isLastPage && !isFirst){
+                        console.log(isLastPage)
+                        getMoreInfoWithPage(page,searchKeyWord,isLastPage)
+                        page=page+1
+                        console.log("1")
+                    }
+                    if(isFirst){
+                        getMoreInfoWithPage()
+                        isFirst=false
+                        console.log("2")
+                    }
+                });
+            };
+            const observer = new IntersectionObserver(callback, options);
+            const target = document.querySelector('#footer');
+            observer.observe(target);
+            //控制，避免多打api
+            async function getMoreInfoWithPage(page,searchKeyWord,isLastPage){
+                //關閉監聽，避免重複打api
+                observer.unobserve(target)
+                //執行fetch,取得資料
+                getInformation(page,searchKeyWord,isLastPage)
+            }
+            //依照關鍵字搜尋並更新內容
+            function refreshWithKeyWord(){
+                let searchButton = window.document.getElementById("searchButton")
+                searchButton.addEventListener("click",sendSearchRequest)
+                function sendSearchRequest(){
+                //因為更便關鍵字，頁面重製
+                page=0
+                //底部自動刷新打開
+                observer.observe(target) 
+                let information=window.document.getElementById("information")
+                information.innerHTML=""
+                let searchString=window.document.getElementById("searchString")
+                console.log(searchString.value)
+                }    
+            }
+            //送出api請求
+            async function getInformation(page="0",keyword="",isLastPage=false){
+                let searchString=window.document.getElementById("searchString")
+                keyword=searchString.value
+                url="http://127.0.0.1:8666/api/attractions/?page=" + page + "&keyword=" +keyword
+                let response= await fetch(url)
+                let data=await response.text()
+                // data=data.replaceAll("\'","\"")
+                let jData=JSON.parse(data)
+                console.log(jData)
+                console.log(jData["data"].length)
+                if(jData["data"].length<13){
+                    isLastPage=true
+                }
+                let dataLength=jData["data"].length
+                if(dataLength==0){
+                    let information=window.document.getElementById("information")
+                    information.textContent="查無資料!"
+                }
+                if(!isLastPage){
+                    //如果不是最後一頁把監聽打開
+                    observer.observe(target)   
+                }else{
+                    // 如果資料不足12筆，要多印一筆
+                    dataLength=dataLength+1
+                }
+                //迴圈創造顯示畫面
+                for(let i=0;i<dataLength-1;i++){
+                    imgUrl=jData["data"][i]["images"]
+                    let imgUrlList=imgUrl.split("http")
+                    url="http"+imgUrlList[1]
+                    let information=window.document.getElementById("information")
+                    let oneInformation=window.document.createElement("div")
+                    oneInformation.setAttribute("class","oneInformation")
+                    let imagebox=window.document.createElement("div")
+                    url="url(" + "'" + url + "'" + ")"
+                    imagebox.style.backgroundImage=url
+                    imagebox.setAttribute("class","imagebox")
+                    let detailsBox=window.document.createElement("div")
+                    detailsBox.setAttribute("class","detailsBox")
+                    let detailsWord=window.document.createElement("div")
+                    detailsWord.setAttribute("class","detailsWord")
+                    detailsWord.textContent=jData["data"][i]["name"]
+                    let infoBox=window.document.createElement("div")
+                    infoBox.setAttribute("class","infoBox")
+                    let infoBoxLeft=window.document.createElement("div")
+                    infoBoxLeft.setAttribute("class","infoBoxLeft")
+                    infoBoxLeft.textContent=jData["data"][i]["mrt"]
+                    let infoBoxRight=window.document.createElement("div")
+                    infoBoxRight.setAttribute("class","infoBoxRight")
+                    infoBoxRight.textContent=jData["data"][i]["category"]
+                    information.appendChild(oneInformation)
+                    oneInformation.appendChild(imagebox)
+                    imagebox.appendChild(detailsBox)
+                    detailsBox.appendChild(detailsWord)
+                    oneInformation.appendChild(infoBox)
+                    infoBox.appendChild(infoBoxLeft)
+                    infoBox.appendChild(infoBoxRight)
+                }
+            }
+        }
+        function addListenerOnSearchInput(){
+            let searchInput = window.document.getElementById("form")
+            searchInput.addEventListener('focus',(event)=>{
+                console.log("focus")
+                let catListBox = window.document.getElementById('catListBox')
+                showCatList()
+            },true)
+
+            searchInput.addEventListener('blur',(event)=>{
+                console.log("unfocus")
+                setTimeout('blur()',2000)
+                hideCatList()
+            },true)
+            function hideCatList(){
+                let catListBox = window.document.getElementById('catListBox')
+                catListBox.style.display = 'none'
+            }
+            function showCatList(){
+                let catListBox = window.document.getElementById('catListBox')
+                let searchBar= window.document.getElementById("searchString")
+                let index=0
+                // if(catListBox.style.display!='none'){
+                //     index=parseFloat(catListBox.style.opacity)
+                //     console.log(index)
+                // }
+                catListBox.style.display='block'
+                //放入一個漸漸浮現出CatList的動畫,也可從css裡面的 transition-duration 控制持續時間
+                catListBox.style.opacity=0
+                let animeId=window.setInterval(function(){
+                    if(index>=1){
+                        window.clearInterval(animeId)
+                    }
+                    index=index+0.01
+                    catListBox.style.opacity=index
+                    console.log(index)
+                },1)
+            }
+        }
+        async function buildCatList(){
+            url="http://127.0.0.1:8666/api/categories"
+            let response= await fetch(url)
+            let data=await response.text()
+            // console.log(data)
+            let jData=JSON.parse(data)
+            console.log(jData['data'].length)
+            let catListBox = window.document.getElementById('catListBox')
+            // let catListUL = window.document.createElement('UL')
+            // catListBox.appendChild(catListUL)
+            for(let i=0;i< jData['data'].length;i++){
+                let itemInCatList = window.document.createElement('LI')
+                itemInCatList.setAttribute('id',i)
+                itemInCatList.setAttribute('class','itemInCatList')
+                itemInCatList.textContent=jData['data'][i]
+                itemInCatList.addEventListener("mousedown",function(e){
+                    console.log(itemInCatList.textContent)
+                    let searchString = window.document.getElementById("searchString")
+                    searchString.value=itemInCatList.textContent
+                },true)
+                catListBox.appendChild(itemInCatList)
+            }
+        }
+        function print(){
+            console.log("test")
+        }
+    </script>
+</head>
+<body id="body" onload="init()" class="body">
+    <div class="box">
+        <div class="outside"></div>
+        <div class="inside">
+            <div class="top">
+                <div class="topLeft" onclick="print()">台北一日遊</div>
+                <div class="topRight">
+                    <div class="scheduld">預定行程</div>
+                    <div class="login">登入/註冊</div>
+                </div>
+            </div>
+        </div>
+        <div class="outside"></div>
+    </div>
+    <div class="boxWelcome">
+        <div class="outside"></div>
+        <div class="welcome">
+            <div class="solgan">
+                <div style="color: white; font-size: 25px;">輕鬆享受台北一日修悠閒</div>
+                <div style="color: white; font-size: 15px;margin-top:30px;margin-bottom: 30px;">探索每個角落，體現城市的深度旅遊行程</div>
+                <div class="searchBar">
+                    <div style="display:inline-block ;">
+                        <form id="form">
+                            <input class="searchInput" type="text" name="searchString" id="searchString" placeholder="請輸入查詢關鍵字">
+                            <div class="catListBox" id="catListBox">
+                            </div>
+                        </form>
+                    </div>
+                    <button type="button" class="searchButton" id="searchButton" >
+                    
+                </div>
+
+
+            </span>
+            </div>
+        </div>
+        <div class="outside"></div>
+    </div>
+    <div class="boxInfo">
+        <div class="outside"></div>
+        <div class="information" id="information"></div>
+        <div class="outside"></div>
+    </div>
+    <div class="footer" id="footer">
+        <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+
+
+
+    
+</body>
+</html>

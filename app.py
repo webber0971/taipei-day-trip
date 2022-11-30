@@ -1,5 +1,8 @@
 from flask import *
-app=Flask(__name__)
+
+app=Flask(
+	__name__)
+
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 from mysql.connector import pooling
@@ -142,7 +145,7 @@ def getAttractionsInformation():
 	mycursor=connector.cursor()
 	mycursor.execute("use taipeiAttractions")
 	first=int(page)*12
-	dataCounts=12
+	dataCounts=13
 	try:
 		if(keyword != ""):
 			sql="select * from taipeiAttractionsData where cat=%s or name like %s limit %s,%s"
@@ -171,7 +174,8 @@ def getAttractionsInformation():
 			listData.append(data)
 		nextpage=int(page)+1
 		resp={"nextPage":nextpage,"data":listData}
-		return jsonify(resp)
+		print(type(resp))
+		return resp,200
 	except:
 		mycursor.close()
 		connector.close()
@@ -203,6 +207,8 @@ def getDataWithId(id):
 				"lng": findInDataBase[15],
 				"images":findInDataBase[13]}
 			resp={"data":data}
+			resp=str(resp)
+			print(type(resp))
 			return jsonify(resp),200
 		else:
 			return jsonify({"error":True,"message":"此id無資料"}),400
@@ -223,15 +229,21 @@ def getCategoriesList():
 		catList=mycursor.fetchall()
 		mycursor.close()
 		connector.close()
-		print(catList)
 		resultCatList=[]
-		for i in catList:
-			resultCatList.append(i[0])
+		print(type(catList[0][0]))
+		print(catList[0])
+		for x in catList:
+			if x[0] not in resultCatList:
+				resultCatList.append(x[0])
 		resp={"data":resultCatList}
+		print(type(resp))
 		return jsonify(resp),200
 	except:
 		mycursor.close()
 		connector.close()
 		return jsonify({"error":True,"message":"伺服器錯誤"}),500
+# @app.get("api/test")
+# def test():
+# 	return 
 
-app.run("0.0.0.0",debug=True)
+app.run(port="8666",debug=True)
