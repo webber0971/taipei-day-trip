@@ -38,7 +38,7 @@
             // const root=document.querySelector('#body');
             const options={
                 // root,
-                threshold:[0.8] //監聽的物件顯示80%
+                threshold:[0.3] //監聽的物件顯示30%
             }
             const callback = (entries, observer) => {
                 entries.forEach(entry => {
@@ -229,18 +229,15 @@
                 <div style="color: white; font-size: 25px;">輕鬆享受台北一日修悠閒</div>
                 <div style="color: white; font-size: 15px;margin-top:30px;margin-bottom: 30px;">探索每個角落，體現城市的深度旅遊行程</div>
                 <div class="searchBar">
-                    <div style="display:inline-block ;">
-                        <form id="form">
+                    <div style="display:inline-block ;width: 90%;">
+                        <form id="form" style='width : 100%'>
                             <input class="searchInput" type="text" name="searchString" id="searchString" placeholder="請輸入查詢關鍵字">
                             <div class="catListBox" id="catListBox">
                             </div>
                         </form>
                     </div>
                     <button type="button" class="searchButton" id="searchButton" >
-                    
                 </div>
-
-
             </span>
             </div>
         </div>
