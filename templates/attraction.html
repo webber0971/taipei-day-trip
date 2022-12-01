@@ -16,7 +16,7 @@
         async function buildCatList(){
             let url = location.href.split("/")
             let urlId = url[url.length-1]
-            url="http://127.0.0.1:8666/api/attraction/"+urlId
+            url="/api/attraction/"+urlId
             let response= await fetch(url)
             let data=await response.text()
             let jData=JSON.parse(data)
@@ -172,7 +172,7 @@
                     </div>
                 </div>
                 <div class="allText">
-                    <div class="description" id="description">fff</div>
+                    <div class="description" id="description"></div>
                     
                     <div class="address" >
                         <div style="font-size:large;font-weight: bolder;">景點地址 :</div>

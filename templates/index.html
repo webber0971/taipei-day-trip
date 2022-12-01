@@ -82,7 +82,7 @@
             async function getInformation(page="0",keyword="",isLastPage=false){
                 let searchString=window.document.getElementById("searchString")
                 keyword=searchString.value
-                url="http://127.0.0.1:8666/api/attractions/?page=" + page + "&keyword=" +keyword
+                url="/api/attractions/?page=" + page + "&keyword=" +keyword
                 let response= await fetch(url)
                 let data=await response.text()
                 let jData=JSON.parse(data)
@@ -184,7 +184,7 @@
             }
         }
         async function buildCatList(){
-            url="http://127.0.0.1:8666/api/categories"
+            url="/api/categories"
             let response= await fetch(url)
             let data=await response.text()
             let jData=JSON.parse(data)
