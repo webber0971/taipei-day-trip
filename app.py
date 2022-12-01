@@ -207,9 +207,9 @@ def getDataWithId(id):
 				"lng": findInDataBase[15],
 				"images":findInDataBase[13]}
 			resp={"data":data}
-			resp=str(resp)
+			# resp=str(resp)
 			print(type(resp))
-			return jsonify(resp),200
+			return resp,200
 		else:
 			return jsonify({"error":True,"message":"此id無資料"}),400
 	except:
