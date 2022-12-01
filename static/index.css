@@ -1,42 +1,36 @@
+
+
+/* 首頁 */
+/* 設定html、body，可以使螢幕刷新時不會因為是否有出現下拉霸而伸縮 */
 html {
     height: 100%;
+    margin: 1px;
 }
 body{
-    margin: 0;
-    min-height: 100%;
-    display: grid; /*使用grid排版*/
-    grid-template-rows: 1fr auto; /*將上半部設置為一個單位，剩下的部分設為自動高度*/
-    font-family:'Noto Sans TC';
+    height: 100%;
+    margin: 0px;
 }
+/* footer固定在底部 */
+.wrapper {
+    min-height: 100%; /*外層高度100%*/
+    margin-bottom: -100px; /*隨footer高度需做調整*/
+}
+/* 設定最上方固定欄 */
 .box{
     position:fixed;
     z-index: 999;
-    top:0px;
-    background-color:white;
-    /* margin-bottom: 10px; */
-    /* padding: 100px; */
-    display: grid;
-    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
-}
-.boxInfo{
-    background-color: white;
+    top: 0px;
     width: 100%;
-    padding-top: 40px;
-    margin-bottom: 10px;
     display: grid;
     grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
-    row-gap: 20px;
-    padding-bottom: 100px;
+    background-color: white;
 }
-.inside{
-    height:inherit;
-    display: inline-block;
-}
-.top{
+.insideTop{
+    display: 100%;
+    height: 50PX;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: inherit;
-} 
+}
 .topLeft{
     padding: 5px;
     font-size: 30px;
@@ -59,33 +53,102 @@ body{
     padding: 5px;
     color: #666666;
 }
+.scheduld{
+    display: inline-block;
+}
+.login{
+    display: inline-block;
+}
+/* 設定歡迎頁面及搜尋 */
 .boxWelcome{
     margin-top: 50px;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
-    height: 260px;
     background:url("../static/welcome.png");
-    background-size: 2000px ;
-    padding-bottom: 40px;
-   
+    height: 260px;
+    margin-bottom: 2%;
 }
-.welcome{
+.insidewelcome{
     display: flex;
     align-items: center;  
-    padding: 10px;
+    margin: 20px;
 }
-.information{
+.solgan{
+    width: 100%;
+}
+.searchBar{
+    display: flex;
+    width: 420px;
+    height: 46px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+.searchInput{
+    border: none;
+    padding: 5px;
+    width: 350px; 
+    height: 30px; 
+    border-radius: 5px;
+}
+.searchButton{
+    display:inline-block ; 
+    background-image: url(/static/icon_search.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #448899;
+    width: 100px;
+    height: 46px;
+    border-radius: 5px; 
+    text-align: center ;
+}
+.catListBox{
+    width: 350px;
+    position: absolute;
+    z-index: 9999999;
+    display:none;
+}
+/* 設定點選搜尋自動跑出的cat選項 */
+.catListBox{
+    width: 350px;
+    position: absolute;
+    z-index: 9999999;
+    display:none;
+}
+.itemInCatList{
+    background:rgba(253, 253, 253, 0.7);
+    width: 100%;
+    border-style:dotted;
+    border-color: #b0b0b0;
+    border-width: 0.01px;
+    border-radius: 5px;
+    padding: 5px;
+    list-style-type: none;
+}
+.itemInCatList:hover{
+    background-color: rgba(175, 173, 173, 0.8);
+}
+/* 設定查詢到的頁面內容 */
+.boxInfo{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+    padding-bottom: 100px;
+}
+.insideInfo{
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    row-gap:30px;
-    column-gap: 5px;
-    /* margin-left: 12px; */
 }
 .oneInformation{
     border-radius: 5px;
     display: inline-block;
-    width: 275px;
-    height: 240;
+    margin-left: 6%;
+    margin-bottom: 6%;
+    width: 88%;
+    height: 240px;
     border-style: solid;
     border-color: #dbd2d2;
     border-width: 1px;
@@ -124,6 +187,8 @@ body{
     position:absolute;
     right: 3px;
 }
+
+/* 設定footer */
 .footer{
     grid-row-start: 20;
     grid-row-end: 21;
@@ -137,137 +202,307 @@ body{
 .footerText{
     color: aliceblue;
 }
-.searchBar{
-    display: flex;
-    width: 420px;
-    height: 40px;
-    background-color: white;
+
+/* ---------------------------------------- */
+/* attraction頁 */
+.spaceUnderTopBar{
+    height: 50px;
+}
+.attractionPageContentBox{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+    padding-bottom: 100px;
+}
+.photoAndBooking{
+    width: 100%;
+    grid-template-columns: 18fr 20fr;
+    display: grid;
+}
+.photos{
+    display: grid;
+    grid-template-columns: 1fr 10fr 1fr;
+    /* background-color: #448899; */
+    width: 95%;
+    height: 406px;    
+    background-size: cover;
+    border-radius: 5px;
+    margin: 3%;
+}
+.onephoto{
+    display: none;
+    position:absolute;
+    height: 406px;
+    width: 540px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-bottom: 5px;
+    opacity: 0;
+    z-index: -1;
+}
+.leftPhotoButtonBox{
+    height: 100%;
+    display:flex;
+    align-items: center;
+    justify-content: center; 
+}
+.leftPhotoButtonItem{
+    border: none;
+    border-radius: 50%;
+    background:none;
+}
+.rightPhotoButtonBox{
+    height: 100%;
+    display:flex;
+    align-items: center;
+    justify-content: center; 
+    z-index: 110;
+    /* background-image: url(/static/btn_rightArrow.png); */
+}
+.rightPhotoButtonItem{
+    border: none;
+    border-radius: 50%;
+    background:none;
+}
+.underbubbleSpace{
+    display:flex;
+    align-items:flex-end;
+    justify-content: center; 
+}
+.bubble{
+    display: inline-block;
     display: flex;
     align-items: center;
-    border-radius: 5px;
+    justify-content: center;
+    margin: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
 }
-.searchInput{
-    border: none;
-    padding: 5px;
-    width: 350px; 
-    height: 30px; 
-    border-radius: 5px;
+.bubbleInside{
+    display: flex;
+    width: 8px;
+    height: 8px;
+    background-color: black;
+    border-radius: 50%;
+    /* opacity: 0; */
+    display: none;
 
 }
-.searchButton{
-    display:inline-block ; 
-    background-image: url(/static/icon_search.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: #448899;
-    width: 100px;
-    height: 40px;
-    border-radius: 5px; 
-    text-align: center ;
+.attractionName{
+    font-size:x-large;
+    font-weight: bolder;
+    margin:20px;
 }
-.catListBox{
-    width: 350px;
-    position: absolute;
-    z-index: 9999999;
-    display:none;
+.catAtMrt{
+    margin-left: 20px;
+    margin-bottom: 10px;
 }
-.itemInCatList{
-    background:rgba(253, 253, 253, 0.7);
-    /* width: 350px; */
-    width: 100%;
-    border-style:dotted;
-    border-color: #b0b0b0;
-    border-width: 0.01px;
+
+.booking{
+    width: 95%;
+    margin: 3%;
+}
+.myform{
+    padding-top: 10px;
+    margin: 20px;
+    background-color: #E8E8E8;
     border-radius: 5px;
-    padding: 5px;
-    list-style-type: none;
 }
-.itemInCatList:hover{
-    background-color: rgba(175, 173, 173, 0.8);
+.myform>div{
+    margin: 20px;
 }
-@media (max-width:360px) {
-    .information{
+/* ----------自訂radio button------------------ */
+
+.radio-item {
+    display: inline-block;
+    position: relative;
+    padding: 0 6px;
+    margin: -10px 0 0;
+  }
+  
+  .radio-item input[type='radio'] {
+    display: none;
+  }
+  
+  .radio-item label {
+    color: #666;
+    font-weight: normal;
+  }
+  
+  .radio-item label:before {
+    content: " ";
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    margin: 0 5px 0 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 11px;
+    border: 2px solid #ffffff;
+    background-color: white;
+  }
+  
+  .radio-item input[type=radio]:checked + label:after {
+    border-radius: 11px;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 9px;
+    left: 10px;
+    content: " ";
+    display: block;
+    background: #448899;
+  }
+/* -------------------------------- */
+.formSubmitButton{
+
+    width: 154px;
+    height: 36px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    color: white;
+    background-color: #448899;
+    border-style: none;
+    border-radius: 5px;
+}
+.allText{
+    margin: 30px;
+    margin-top: 0px;
+}
+.description{
+    margin: 10px;
+}
+.address{
+    margin: 10px;
+}
+.transportation{
+    margin: 10px;;
+}
+@media (max-width:1200px) {
+    .box{
+        grid-template-columns: 1fr;
+    }
+    .boxWelcome{
         grid-template-columns: 1fr;
     }
     .boxInfo{
-        grid-template-columns: 1fr minmax(320px,1fr) 1fr;
-        padding-bottom: 10px;
-        /* height: 100px; */
-        /* padding: 20px; */
+        grid-template-columns:1fr;
     }
-    .oneInformation{
-        border-radius: 5px;
-        display: inline-block;
-        width: auto;
-        height: 240;
-        border-style: solid;
-        border-color: #dbd2d2;
-        border-width: 1px;
+    .attractionPageContentBox{
+        grid-template-columns: 1fr;
     }
-    .imagebox{
-        width: auto;
-        position: relative;
-        background-size: cover;  /* contain 、 cover*/
+    .onephoto{
+        width: 45%;
     }
-    .boxWelcome{
-        /* margin-top: 50px; */
-        display: grid;
-        grid-template-columns: 1fr minmax(360px,1fr) 1fr;
-        height: 280px;
-        width: 360px;
-        background:url("/static/welcomeMoblie.png");
-        /* background-size: 360 ;s */
-        /* background-size:360px 320px; */
-        background-size: contain;
-        /* padding-bottom: 40px;   */
-    }
-    .box{
-        /* position:fixed; */
-        /* z-index: 999; */
-        top:0px;
-        width: 360px;
-        background-color:white;
-        display: grid;
-        grid-template-columns: 1fr minmax(360px,1fr) 1fr;
-    }
+}
+@media (max-width:500px) {
     .searchBar{
-        display: flex;
-        width: 100%;
-        height: 40px;
-        background-color: white;
-        display: flex;
-        align-items: center;
-        border-radius: 5px;
+        width: 90%; 
+        height: 46px;
     }
     .searchInput{
-        border: none;
-        padding: 5px;
         width: 95%; 
-        height: 30px; 
-        border-radius: 5px;
     
     }
     .searchButton{
-        display:inline-block ; 
-        background-image: url(/static/icon_search.png);
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-color: #448899;
-        width: 40px;
-        height: 40px;
-        border-radius: 5px; 
-        text-align: center ;
-    }
-    .welcome{
-        display: flex;
-        align-items: center;
-          justify-content: center;
+        width: 20%;
+        height: 46px;
     }
     .catListBox{
-        width:227px;
-        position: absolute;
-        z-index: 9999999;
-        display:none;
+        width: 58%;
     }
 }
-  
+@media (max-width:360px) {
+    .oneInformation{
+        border-radius: 5px;
+        display: inline-block;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        width: 90%;
+        height: 240px;
+        border-style: solid;
+        border-color: #dbd2d2;
+        border-width: 1px;
+    }   
+
+    .insideInfo{
+        height: 235;
+        grid-template-columns: 1fr;
+    }
+    .searchBar{
+        width: 90%; 
+        height: 46px;
+    }
+    .searchInput{
+        width: 95%; 
+    
+    }
+    .searchButton{
+        width: 20%;
+        height: 46px;
+
+    }
+    .catListBox{
+        width: 58%;
+    }
+
+    /* ---------------- attraction頁面*/
+    .photoAndBooking{
+        grid-template-columns: 1fr;
+    }
+    .onephoto{
+        display: none;
+        position:absolute;
+        height: 406px;
+        width:95%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        padding-bottom: 5px;
+        opacity: 0;
+        z-index: -1;
+    }
+    .radio-item {
+        display: inline-block;
+        position: relative;
+        padding: 0 6px;
+        margin: -10px 0 0;
+      }
+      
+    .radio-item input[type='radio'] {
+        display: none;
+    }  
+    .radio-item label {
+        color: #666;
+        font-weight: normal;
+    }
+      
+    .radio-item label:before {
+        content: " ";
+        display: inline-block;
+        position: relative;
+        left: 2px;
+        margin: 0 5px 0 0;
+        top: 7px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-bottom: 3px;
+        border: 2px solid #ffffff;
+        background-color: white;
+    }
+    .radio-item input[type=radio]:checked + label:after {
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        content: " ";
+        display: block;
+        border: 1px solid #448899;
+        background: #448899;
+    }
+
+}

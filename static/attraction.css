@@ -1,0 +1,187 @@
+html {
+    height: 100%;
+}
+body{
+    margin: 0;
+    min-height: 100%;
+    display: grid; /*使用grid排版*/
+    grid-template-rows: 1fr auto; /*將上半部設置為一個單位，剩下的部分設為自動高度*/
+    font-family:'Noto Sans TC';
+}
+.box{
+    position:fixed;
+    z-index: 999;
+    top:0px;
+    background-color:white;
+    /* margin-bottom: 10px; */
+    /* padding: 100px; */
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+}
+.boxInfo{
+    background-color: white;
+    width: 100%;
+    padding-top: 40px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+    row-gap: 20px;
+    padding-bottom: 100px;
+}
+.inside{
+    height:inherit;
+    display: inline-block;
+}
+.top{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: inherit;
+} 
+.topLeft{
+    padding: 5px;
+    font-size: 30px;
+    color:#448899;
+    text-align: left;
+}
+.topRight{
+    display: flex;
+    padding: 5px;
+    margin-top: 5px;
+    justify-content: right;
+}
+.scheduld{
+    display: inline-block;
+    padding: 5px;
+    color: #666666;
+}
+.login{
+    display: inline-block;
+    padding: 5px;
+    color: #666666;
+}
+.boxWelcome{
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+    height: 260px;
+    background:url("../static/welcome.png");
+    background-size: 2000px ;
+    padding-bottom: 40px;
+   
+}
+.welcome{
+    display: flex;
+    align-items: center;  
+    padding: 10px;
+}
+.information{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap:30px;
+    column-gap: 5px;
+    /* margin-left: 12px; */
+}
+.oneInformation{
+    border-radius: 5px;
+    display: inline-block;
+    width: 275px;
+    height: 240;
+    border-style: solid;
+    border-color: #dbd2d2;
+    border-width: 1px;
+}
+.imagebox{
+    width: 100%;
+    height: 200px;
+    position: relative;
+    background-size: cover;  /* contain 、 cover*/
+}
+.detailsBox{
+    position:absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color: #666666;
+    background: hsla(0, 0%, 13%, 0.5);
+}
+.detailsWord{
+    color: aliceblue;
+    padding: 10px;
+}
+.infoBox{
+    position: relative;
+    width: 100%;
+    height:30px;
+}
+.infoBoxLeft{
+    color: #666666;
+    padding: 5px;
+    position:absolute;
+    left: 3px;
+}
+.infoBoxRight{
+    color: #666666;
+    padding: 5px;
+    position:absolute;
+    right: 3px;
+}
+.footer{
+    grid-row-start: 20;
+    grid-row-end: 21;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    background-color:#757575;
+}
+.footerText{
+    color: aliceblue;
+}
+.searchBar{
+    display: flex;
+    width: 420px;
+    height: 40px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+.searchInput{
+    border: none;
+    padding: 5px;
+    width: 350px; 
+    height: 30px; 
+    border-radius: 5px;
+
+}
+.searchButton{
+    display:inline-block ; 
+    background-image: url(/static/icon_search.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #448899;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px; 
+    text-align: center ;
+}
+.catListBox{
+    width: 350px;
+    position: absolute;
+    z-index: 9999999;
+    display:none;
+}
+.itemInCatList{
+    background:rgba(253, 253, 253, 0.7);
+    /* width: 350px; */
+    width: 100%;
+    border-style:dotted;
+    border-color: #b0b0b0;
+    border-width: 0.01px;
+    border-radius: 5px;
+    padding: 5px;
+    list-style-type: none;
+}
+.itemInCatList:hover{
+    background-color: rgba(175, 173, 173, 0.8);
+}

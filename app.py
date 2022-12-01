@@ -207,9 +207,10 @@ def getDataWithId(id):
 				"lng": findInDataBase[15],
 				"images":findInDataBase[13]}
 			resp={"data":data}
-			resp=str(resp)
+			# resp=str(resp)
 			print(type(resp))
-			return jsonify(resp),200
+			return resp,200
+			# return "efkiweo"
 		else:
 			return jsonify({"error":True,"message":"此id無資料"}),400
 	except:
@@ -242,8 +243,4 @@ def getCategoriesList():
 		mycursor.close()
 		connector.close()
 		return jsonify({"error":True,"message":"伺服器錯誤"}),500
-# @app.get("api/test")
-# def test():
-# 	return 
-
-app.run(port="8666",debug=True)
+app.run(host="0.0.0.0",port=8888)

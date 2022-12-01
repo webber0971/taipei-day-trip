@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="/static/index.css">
+        <title>index2</title>
     <script>
         // 連線初始化資料
         function init(){
@@ -23,8 +23,6 @@
                 information.innerHTML=""
                 let searchString=window.document.getElementById("searchString")
                 console.log(searchString.value)
-
-
             }
         }
         //監聽是否滑到頁面最底端，如果到最底部，且不識最後一頁，則送出請求。
@@ -33,9 +31,7 @@
             let searchKeyWord=""
             let isLastPage=false
             let isFirst=true
-
             refreshWithKeyWord()
-            // const root=document.querySelector('#body');
             const options={
                 // root,
                 threshold:[0.3] //監聽的物件顯示30%
@@ -51,6 +47,7 @@
                     }
                     if(isFirst){
                         getMoreInfoWithPage()
+                        page=page+1
                         isFirst=false
                         console.log("2")
                     }
@@ -88,7 +85,6 @@
                 url="http://127.0.0.1:8666/api/attractions/?page=" + page + "&keyword=" +keyword
                 let response= await fetch(url)
                 let data=await response.text()
-                // data=data.replaceAll("\'","\"")
                 let jData=JSON.parse(data)
                 console.log(jData)
                 console.log(jData["data"].length)
@@ -115,6 +111,17 @@
                     let information=window.document.getElementById("information")
                     let oneInformation=window.document.createElement("div")
                     oneInformation.setAttribute("class","oneInformation")
+                    oneInformation.setAttribute("id",jData['data'][i]['id'])
+                    console.log(jData['data'][i]['id'])
+                    console.log(oneInformation.id)
+                    oneInformation.addEventListener("click",redirectToAttractionPageWithid)
+                    function redirectToAttractionPageWithid(){
+                        console.log(this.id)
+                        url="/attraction/"+this.id
+                        // window.open(url) //開新分頁
+                        window.open(url,'_self') //原頁跳轉
+                    }
+
                     let imagebox=window.document.createElement("div")
                     url="url(" + "'" + url + "'" + ")"
                     imagebox.style.backgroundImage=url
@@ -163,10 +170,6 @@
                 let catListBox = window.document.getElementById('catListBox')
                 let searchBar= window.document.getElementById("searchString")
                 let index=0
-                // if(catListBox.style.display!='none'){
-                //     index=parseFloat(catListBox.style.opacity)
-                //     console.log(index)
-                // }
                 catListBox.style.display='block'
                 //放入一個漸漸浮現出CatList的動畫,也可從css裡面的 transition-duration 控制持續時間
                 catListBox.style.opacity=0
@@ -184,12 +187,9 @@
             url="http://127.0.0.1:8666/api/categories"
             let response= await fetch(url)
             let data=await response.text()
-            // console.log(data)
             let jData=JSON.parse(data)
             console.log(jData['data'].length)
             let catListBox = window.document.getElementById('catListBox')
-            // let catListUL = window.document.createElement('UL')
-            // catListBox.appendChild(catListUL)
             for(let i=0;i< jData['data'].length;i++){
                 let itemInCatList = window.document.createElement('LI')
                 itemInCatList.setAttribute('id',i)
@@ -203,57 +203,54 @@
                 catListBox.appendChild(itemInCatList)
             }
         }
+        //測試用
         function print(){
             console.log("test")
         }
     </script>
 </head>
-<body id="body" onload="init()" class="body">
+<body id="body" onload="init()">
     <div class="box">
-        <div class="outside"></div>
-        <div class="inside">
-            <div class="top">
-                <div class="topLeft" onclick="print()">台北一日遊</div>
-                <div class="topRight">
-                    <div class="scheduld">預定行程</div>
-                    <div class="login">登入/註冊</div>
-                </div>
+        <div class="outsideTop"></div>
+        <div class="insideTop">
+            <div class="topLeft">台北一日遊</div>
+            <div class="topRight">
+                <div class="scheduld">預定行程</div>
+                <div class="login">登入/註冊</div>
             </div>
         </div>
-        <div class="outside"></div>
+        <div class="outsideTop"></div>
     </div>
-    <div class="boxWelcome">
-        <div class="outside"></div>
-        <div class="welcome">
-            <div class="solgan">
-                <div style="color: white; font-size: 25px;">輕鬆享受台北一日修悠閒</div>
-                <div style="color: white; font-size: 15px;margin-top:30px;margin-bottom: 30px;">探索每個角落，體現城市的深度旅遊行程</div>
-                <div class="searchBar">
-                    <div style="display:inline-block ;width: 90%;">
-                        <form id="form" style='width : 100%'>
-                            <input class="searchInput" type="text" name="searchString" id="searchString" placeholder="請輸入查詢關鍵字">
-                            <div class="catListBox" id="catListBox">
-                            </div>
-                        </form>
+    <div class="wrapper">
+        <div class="boxWelcome">
+            <div class="outsideWelcome"></div>
+            <div class="insidewelcome">
+                <div class="solgan">
+                    <div style="color: white; font-size: 25px;">輕鬆享受台北一日修悠閒</div>
+                    <div style="color: white; font-size: 15px;margin-top:30px;margin-bottom: 30px;">探索每個角落，體現城市的深度旅遊行程</div>
+                    <div class="searchBar">
+                        <div style="display:inline-block ;width: 90%;">
+                            <form id="form" style='width : 100%'>
+                                <input class="searchInput" type="text" name="searchString" id="searchString" placeholder="請輸入查詢關鍵字">
+                                <div class="catListBox" id="catListBox">
+                                </div>
+                            </form>
+                        </div>
+                        <button type="button" class="searchButton" id="searchButton" >
                     </div>
-                    <button type="button" class="searchButton" id="searchButton" >
+                </span>
                 </div>
-            </span>
             </div>
+            <div class="outsideWelcome"></div>
         </div>
-        <div class="outside"></div>
-    </div>
-    <div class="boxInfo">
-        <div class="outside"></div>
-        <div class="information" id="information"></div>
-        <div class="outside"></div>
+        <div class="boxInfo">
+            <div class="outsideInfo"></div>
+            <div class="insideInfo" id="information"></div>
+            <div class="outsideInfo"></div>
+        </div>
     </div>
     <div class="footer" id="footer">
         <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
     </div>
-
-
-
-    
 </body>
 </html>

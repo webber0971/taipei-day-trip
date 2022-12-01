@@ -36,10 +36,13 @@ with open('./data/taipei-attractions.json',mode='r',encoding='utf-8') as file:
     data=file.read()
 data=json.loads(data)
 i = data['result']['results'][0]
+x=0
 for i in data['result']['results']:
     sql = "insert into taipeiAttractionsData (rate,direction,name,date,longitude,ref_wp,mrt,serial_no,rowNumber,cat,memo_time,poi,file,idpt,latitude,description,avEnd,address) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     val = (i['rate'],i['direction'],i['name'],i['date'],i['longitude'],i['REF_WP'],i['MRT'],i['SERIAL_NO'],i['RowNumber'],i['CAT'],i['MEMO_TIME'],i['POI'],i['file'],i['idpt'],i['latitude'],i['description'],i['avEnd'],i['address'])
     mycursor.execute(sql,val)
+    x=x+1
+    print(x)
 print("初始資料已輸入資料庫中")
 connector.commit()
 mycursor.close()

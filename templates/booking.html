@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+             * {
+                margin: 0;
+                padding: 0;
+            }
+      
+            li {
+                list-style-type: none;
+            }
+      
+            .tab {
+                width: 978px;
+                margin: 100px auto;
+            }
+      
+            .tab_list {
+                height: 39px;
+                border: 1px solid #ccc;
+                background-color: #f1f1f1;
+            }
+      
+            .tab_list li {
+                float: left;
+                height: 39px;
+                line-height: 39px;
+                padding: 0 20px;
+                text-align: center;
+                cursor: pointer;
+            }
+      
+            .tab_list .current {
+                background-color: #c81623;
+                color: #fff;
+            }
+      
+            .item_info {
+                padding: 20px 0 0 20px;
+            }
+      
+            .item {
+                display: none;
+            }
+            img {
+                width: 978px;
+                height: 550px;
+            }
+        </style>
+        <script src="jquery.min.js"></script>
+    </head>
+    <body> 
+        <div class="tab">  
+            <div class="tab_list"> 
+                <ul>
+                    <li class="current">萝莉</li>
+                    <li>御姐</li>
+                    <li>拔剑少女</li>
+                </ul>
+            </div>
+        <div class="tab_con">
+            <div class="item" style="display: block;"><img src="image/luoli.jpg" /></a></div>
+            <div class="item"><a href="#"><img src="image/yujie.jpg" /></a></div>
+            <div class="item"><a href="#"><img src="image/shaonv.jpg" /></a></div>
+        </div>
+        </div>  
+
+        <script>
+            //获取元素
+            var tab_list = document.querySelector('.tab_list');
+            var lis = tab_list.querySelectorAll('li');
+            var items = document.querySelectorAll('.item');
+            //for循环绑定点击事件
+            for (var i = 0; i<lis.length; i++) {
+                //给li设置索引号
+                lis[i].setAttribute('index', i);
+                lis[i].onclick = function() {
+                    //其余li清除class
+                    for(var i =0; i<lis.length; i++) {
+                        lis[i].className = '';
+                    }
+                    //留下被点击的
+                    this.className = 'current';
+                    //显示内容
+                    var index = this.getAttribute('index');
+                    //隐藏其他，显示被点击的对应的item
+                    for (var i = 0; i < items.length; i++){
+                        items[i].style.display = 'none';
+                    }
+           
+                    items[index].style.display = 'block';
+              
+              
+                }
+            }
+        </script>
+    </body>
+</html>
