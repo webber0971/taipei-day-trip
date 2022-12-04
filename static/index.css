@@ -92,6 +92,7 @@ body{
     width: 350px; 
     height: 30px; 
     border-radius: 5px;
+    background-color: white;
 }
 .searchButton{
     display:inline-block ; 
@@ -99,19 +100,23 @@ body{
     background-repeat: no-repeat;
     background-position: center center;
     background-color: #448899;
+    border: none;
     width: 100px;
     height: 46px;
-    border-radius: 5px; 
+    border-top-right-radius:5px ;
+    border-end-end-radius: 5px;
+
+    /* border-radius: 5px;  */
     text-align: center ;
 }
-.catListBox{
+/* .catListBox{
     width: 350px;
     position: absolute;
     z-index: 9999999;
     display:none;
-}
+} */
 /* 設定點選搜尋自動跑出的cat選項 */
-.catListBox{
+/* .catListBox{
     width: 350px;
     position: absolute;
     z-index: 9999999;
@@ -129,7 +134,38 @@ body{
 }
 .itemInCatList:hover{
     background-color: rgba(175, 173, 173, 0.8);
+} */
+
+/* 設定點選搜尋自動跑出的cat選項  第二版*/
+
+.catListBox{
+    width: 340px;
+    position: absolute;
+    z-index: 9999999;
+    display:none;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    background-color: white;
 }
+.itemInCatList{
+    background:rgba(253, 253, 253, 0.7);
+    width: 88%;
+    border-style:none;
+    border-color: #b0b0b0;
+    border-width: 0.01px;
+    border-radius: 5px;
+    padding: 5px;
+    list-style-type: none;
+}
+.itemInCatList:hover{
+    background-color: #E8E8E8;
+}
+
+
+
+
 /* 設定查詢到的頁面內容 */
 .boxInfo{
     width: 100%;
@@ -396,7 +432,11 @@ body{
     .onephoto{
         width: 45%;
     }
-}
+    .boxWelcome{
+        background:url("../static/welcomeMoblie.png");
+        background-size: cover;
+    }
+/* }
 @media (max-width:500px) {
     .searchBar{
         width: 90%; 
@@ -414,7 +454,7 @@ body{
         width: 58%;
     }
 }
-@media (max-width:360px) {
+@media (max-width:1200px) { */
     .oneInformation{
         border-radius: 5px;
         display: inline-block;
@@ -447,7 +487,7 @@ body{
 
     }
     .catListBox{
-        width: 58%;
+        width: 80%;
     }
 
     /* ---------------- attraction頁面*/
