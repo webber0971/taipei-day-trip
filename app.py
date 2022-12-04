@@ -158,9 +158,14 @@ def getAttractionsInformation():
 		findInDataBase=mycursor.fetchall()
 		mycursor.close()
 		connector.close()
-		print(len(findInDataBase))
 		listData=[]
+		print(len(findInDataBase))
 		for i in range(len(findInDataBase)):
+			imageList=findInDataBase[i][13].split("http")
+			respUrl=[]
+			for j in range(0,len(imageList)):
+				if(imageList[j][-3:].lower()=="jpg"):
+					respUrl.append("http"+imageList[j])
 			data={"id": findInDataBase[i][0],
 				"name": findInDataBase[i][3],
 				"category": findInDataBase[i][10],
@@ -170,7 +175,7 @@ def getAttractionsInformation():
 				"mrt": findInDataBase[i][7],
 				"lat": findInDataBase[i][5],
 				"lng": findInDataBase[i][15],
-				"images":findInDataBase[i][13]}
+				"images":respUrl}
 			listData.append(data)
 		nextpage=int(page)+1
 		resp={"nextPage":nextpage,"data":listData}
@@ -196,6 +201,11 @@ def getDataWithId(id):
 		mycursor.close()
 		connector.close()
 		if(findInDataBase != None):
+			imageList=findInDataBase[13].split("http")
+			respUrl=[]
+			for j in range(1,len(imageList)):
+				if(imageList[j][-3:].lower()=="jpg"):
+					respUrl.append("http"+imageList[j])				
 			data={"id": findInDataBase[0],
 				"name": findInDataBase[3],
 				"category": findInDataBase[10],
@@ -205,7 +215,7 @@ def getDataWithId(id):
 				"mrt": findInDataBase[7],
 				"lat": findInDataBase[5],
 				"lng": findInDataBase[15],
-				"images":findInDataBase[13]}
+				"images":respUrl}
 			resp={"data":data}
 			# resp=str(resp)
 			print(type(resp))

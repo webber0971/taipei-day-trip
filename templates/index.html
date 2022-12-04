@@ -106,8 +106,7 @@
                 //迴圈創造顯示畫面
                 for(let i=0;i<dataLength-1;i++){
                     imgUrl=jData["data"][i]["images"]
-                    let imgUrlList=imgUrl.split("http")
-                    url="http"+imgUrlList[1]
+                    url=imgUrl[1]
                     let information=window.document.getElementById("information")
                     let oneInformation=window.document.createElement("div")
                     oneInformation.setAttribute("class","oneInformation")

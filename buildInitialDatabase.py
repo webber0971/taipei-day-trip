@@ -31,16 +31,29 @@ sql="create table `taipeiAttractionsData`(`id` int auto_increment primary key co
 mycursor.execute(sql)
 print("建立新的table 名稱為 taipeiAttractionsData")
 mycursor.execute("show tables")
+
+sql="create table `images`(`images_id` int auto_increment primary key comment '圖片ID',`imageURL` text,`taipeiAttractionsData_id` int)"
+# sql="create table `images`(`id` int auto_increment primary key comment '圖片ID,`imageURL` text,`taipeiAttractionsData_id` int,FOREIGN KEY(taipeiAttractionsData_id) REFERENCES taipeiAttractionsData(id));"
+mycursor.execute(sql)
+print("建立新的table 名稱為 images")
+
 print("---")
 with open('./data/taipei-attractions.json',mode='r',encoding='utf-8') as file:
     data=file.read()
 data=json.loads(data)
 i = data['result']['results'][0]
-x=0
+x=1
 for i in data['result']['results']:
     sql = "insert into taipeiAttractionsData (rate,direction,name,date,longitude,ref_wp,mrt,serial_no,rowNumber,cat,memo_time,poi,file,idpt,latitude,description,avEnd,address) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     val = (i['rate'],i['direction'],i['name'],i['date'],i['longitude'],i['REF_WP'],i['MRT'],i['SERIAL_NO'],i['RowNumber'],i['CAT'],i['MEMO_TIME'],i['POI'],i['file'],i['idpt'],i['latitude'],i['description'],i['avEnd'],i['address'])
     mycursor.execute(sql,val)
+    imageList=i['file'].split("http")
+    for j in range(1,len(imageList)):
+        url="http"+imageList[j]
+        sql = "insert into images(imageURL,taipeiAttractionsData_id) values (%s,%s)"
+        val = (url,x)
+        mycursor.execute(sql,val)
+        print(url)
     x=x+1
     print(x)
 print("初始資料已輸入資料庫中")

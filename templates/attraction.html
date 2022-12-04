@@ -9,7 +9,7 @@
     <script>
         let photosCount=0
         let displayPhotoIndex=0
-        let urlIsCorrectList=[]
+        let allPhotoUrlList=[]
         async function init(){
             await buildCatList()
         }
@@ -30,17 +30,10 @@
             createPhotoListAndGenerateOnWeb(jData)
             //產生裝有所有圖片的div，並預顯示第一張照片
             function createPhotoListAndGenerateOnWeb(jData){
-                let allPhotoUrlList=jData['data']['images'].split("https://")
+                let allPhotoUrlList=jData['data']['images']
                 console.log(allPhotoUrlList)
-                //判斷是否為正確的jpg url
-                for(i=1;i<allPhotoUrlList.length;i++){
-                    allPhotoUrlList[i]="https://"+allPhotoUrlList[i]
-                    if(allPhotoUrlList[i].substr(-3,3).toLowerCase() == "jpg"){
-                        urlIsCorrectList.push(allPhotoUrlList[i])
-                    }
-                }
-                photosCount=urlIsCorrectList.length
-                console.log(urlIsCorrectList.length)
+                photosCount=allPhotoUrlList.length
+                console.log(allPhotoUrlList.length)
                 let photos=window.document.getElementById("photos") 
                 let onephoto=window.document.createElement('div')
                 onephoto.setAttribute("class","onephoto")
@@ -49,7 +42,7 @@
                 onephoto.style.display="block"
                 onephoto.style.opacity=1
                 //載入並顯示第一張圖片
-                url="url(" + "'" + urlIsCorrectList[0] + "'" + ")"
+                url="url(" + "'" + allPhotoUrlList[0] + "'" + ")"
                 onephoto.style.backgroundImage=url
                 photos.appendChild(onephoto)
                 //創造多筆div存放其他圖片方便之後讀取
@@ -60,13 +53,13 @@
                     onephoto.setAttribute("id",photoName)
                     console.log(photoName)
                     console.log("iii")
-                    url="url(" + "'" + urlIsCorrectList[i] + "'" + ")"
+                    url="url(" + "'" + allPhotoUrlList[i] + "'" + ")"
                     onephoto.style.backgroundImage=url
                     console.log(url)
                     photos.appendChild(onephoto)
                 }
                 let underbubbleSpace=window.document.getElementById("underbubbleSpace")
-                for(let i=0;i<urlIsCorrectList.length;i++){
+                for(let i=0;i<allPhotoUrlList.length;i++){
                     let bubble=window.document.createElement("div")
                     bubble.setAttribute("class","bubble")
                     let bubbleInside=window.document.createElement("div")
