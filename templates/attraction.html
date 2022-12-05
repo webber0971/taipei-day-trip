@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/index.css">
+    <title>attractiona</title>
+    <script>
+        let photosCount=0
+        let displayPhotoIndex=0
+        let allPhotoUrlList=[]
+        async function init(){
+            await buildCatList()
+        }
+        async function buildCatList(){
+            let url = location.href.split("/")
+            let urlId = url[url.length-1]
+            url="/api/attraction/"+urlId
+            let response= await fetch(url)
+            let data=await response.text()
+            let jData=JSON.parse(data)
+            console.log(jData)
+            window.document.getElementById("attractionName").textContent=jData['data']['name']
+            window.document.getElementById("catAtMrt").textContent=jData['data']['category']+" at " + jData['data']['mrt']
+            window.document.getElementById("description").textContent=jData['data']['description']
+            window.document.getElementById("address").textContent=jData['data']['address']
+            window.document.getElementById("mrt").textContent=jData['data']['mrt']
+            window.document.getElementById("transport").textContent=jData['data']['transport']
+            createPhotoListAndGenerateOnWeb(jData)
+            //產生裝有所有圖片的div，並預顯示第一張照片
+            function createPhotoListAndGenerateOnWeb(jData){
+                let allPhotoUrlList=jData['data']['images']
+                console.log(allPhotoUrlList)
+                photosCount=allPhotoUrlList.length
+                console.log(allPhotoUrlList.length)
+                let photos=window.document.getElementById("photos") 
+                let onephoto=window.document.createElement('div')
+                onephoto.setAttribute("class","onephoto")
+                let photoName="photo0"
+                onephoto.setAttribute("id",photoName)
+                onephoto.style.display="block"
+                onephoto.style.opacity=1
+                //載入並顯示第一張圖片
+                url="url(" + "'" + allPhotoUrlList[0] + "'" + ")"
+                onephoto.style.backgroundImage=url
+                photos.appendChild(onephoto)
+                //創造多筆div存放其他圖片方便之後讀取
+                for(let i=1;i<photosCount;i++){
+                    let onephoto=window.document.createElement('div')
+                    onephoto.setAttribute("class","onephoto")
+                    let photoName="photo"+String(i)
+                    onephoto.setAttribute("id",photoName)
+                    console.log(photoName)
+                    console.log("iii")
+                    url="url(" + "'" + allPhotoUrlList[i] + "'" + ")"
+                    onephoto.style.backgroundImage=url
+                    console.log(url)
+                    photos.appendChild(onephoto)
+                }
+                let underbubbleSpace=window.document.getElementById("underbubbleSpace")
+                for(let i=0;i<allPhotoUrlList.length;i++){
+                    let bubble=window.document.createElement("div")
+                    bubble.setAttribute("class","bubble")
+                    let bubbleInside=window.document.createElement("div")
+                    bubbleInside.setAttribute("class","bubbleInside")
+                    let bubbleId="bubble"+String(i)
+                    console.log(bubbleId)
+                    bubbleInside.setAttribute("id",bubbleId)
+                    underbubbleSpace.appendChild(bubble)
+                    bubble.appendChild(bubbleInside)
+                }
+                let bubble0=window.document.getElementById("bubble0")
+                bubble0.style.display="flex"
+                bubble0.style.opacity=1
+            }
+        }
+        //更換價格
+        function changePrice(price){
+            let showPrice = window.document.getElementById("showPrice")
+            showPrice.textContent="新台幣" + price + "元"
+        }
+        //響應左右選擇鍵，更換照片與下方圓點
+        function changePhoto(value){
+            console.log(displayPhotoIndex)
+            beforeBubbleId="bubble"+String(displayPhotoIndex)
+            let beforeBubble=window.document.getElementById(beforeBubbleId)
+            beforePhotoId="photo"+String(displayPhotoIndex)
+            console.log(beforePhotoId)
+            let beferPhoto=window.document.getElementById(beforePhotoId)
+            beferPhoto.style.display="none"
+            beferPhoto.style.opacity=0
+            beforeBubble.style.display="none"
+            beforeBubble.style.opacity=0
+            displayPhotoIndex=displayPhotoIndex+value
+            if(displayPhotoIndex < 0){
+                displayPhotoIndex=photosCount-1
+            }
+            if(displayPhotoIndex == photosCount){
+                displayPhotoIndex=0
+            }
+            afterBubbleId="bubble"+String(displayPhotoIndex)
+            let afterBubble=window.document.getElementById(afterBubbleId)
+            afterBubble.style.display="flex"
+            afterBubble.style.opacity=1
+            afterPhotoId="photo"+String(displayPhotoIndex)
+            let afterPhoto=window.document.getElementById(afterPhotoId)
+            afterPhoto.style.display="block"
+            afterPhoto.style.opacity=1
+        }
+    </script>
+</head>
+<body style="color: #666666;" onload="init()">
+    <div class="box">
+        <div class="outsideTop"></div>
+        <div class="insideTop">
+            <div class="topLeft">台北一日遊</div>
+            <div class="topRight">
+                <div class="scheduld">預定行程</div>
+                <div class="login">登入/註冊</div>
+            </div>
+        </div>
+        <div class="outsideTop"></div>
+    </div>
+    <div class="wrapper">
+        <div class="spaceUnderTopBar"></div>
+        <div class="attractionPageContentBox">
+            <div class="attractionContentOutside"></div>
+            <div class="attractionContentInside">
+                <div class="photoAndBooking">
+                    <div class="photos" id="photos">
+                        <div class="leftPhotoButtonBox" id="leftPhotoButtonBox">
+                            <button id="leftPhotoButtonItem" class="leftPhotoButtonItem" onclick="changePhoto(-1)">
+                                <img src="/static/btn_leftArrow.png">
+                            </button>
+                        </div>
+                        <div class="underbubbleSpace" id="underbubbleSpace">
+                        </div>
+                        <div class="rightPhotoButtonBox" id="rightPhotoButtonBox">
+                            <button id="rightPhotoButtonItem" class="rightPhotoButtonItem" onclick="changePhoto(1)">
+                                <img src="/static/btn_rightArrow.png">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="booking">
+                        <div id="attractionName" class="attractionName"></div>
+                        <div id="catAtMrt" class="catAtMrt">  </div>
+                        <form id="myform" class="myform">
+                            <div>訂購導覽行程</div>
+                            <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
+                            <div>選擇日期：<input type="date"></div>
+                            <div class="selectTime">選擇時間：
+                                <span class="radio-item">
+                                    <input type="radio" id="ritema" name="ritem" value="2000" onclick="changePrice(value)">
+                                    <label for="ritema">上半天</label>
+                                </span>
+                                <span class="radio-item">
+                                    <input type="radio" id="ritemb" name="ritem" value="2500" onclick="changePrice(value)">
+                                    <label for="ritemb">下半天</label>
+                                </span>
+                            </div>
+                            <div>導覽費用：<span id="showPrice"></span></div>
+                            <input type="button" value="開始預約行程" class="formSubmitButton" >
+                        </form>
+                    </div>
+                </div>
+                <div class="allText">
+                    <div class="description" id="description"></div>
+                    
+                    <div class="address" >
+                        <div style="font-size:large;font-weight: bolder;">景點地址 :</div>
+                        <div id="address"></div>
+                    </div>
+                    <div class="transportation">
+                        <div style="font-size:large;font-weight: bolder;">交通方式 :</div>
+                        <span id="mrt">捷運站名。</span><span id="transport">交通方式。</span>
+                    </div>
+                </div>
+            </div>
+            <div class="attractionContentOutside" ></div>
+        </div>
+    </div>
+    <div class="footer" id="footer">
+        <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+</body>
+</html>
