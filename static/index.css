@@ -103,7 +103,8 @@ body{
     height: 47px;
     width: 310px;
     border-radius: 5px;
-    border-style:1px;
+    border-style: solid;
+    border-width: 1px;
     border-color: #CCCCCC;
 }
 .inputSubmit{
@@ -466,6 +467,20 @@ body{
     font-weight: bolder;
     margin:20px;
 }
+.attractionName:hover{
+    text-shadow:
+    0 0 5px rgba(247, 245, 41,.1),
+    0 0 10px rgba(247, 245, 41,1),
+    0 0 20px rgba(247, 245, 41,1),
+    0 0 40px rgba(247, 245, 41,1);
+    animation:neon-shine 2s linear infinite;
+}
+@keyframes neon-shine{
+    0%{opacity:1;}
+    90%{opacity:0;}
+    100%{
+    color:#232323;}
+  }  
 .catAtMrt{
     margin-left: 20px;
     margin-bottom: 10px;

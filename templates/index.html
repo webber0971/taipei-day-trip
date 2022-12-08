@@ -128,6 +128,11 @@
                     url="url(" + "'" + url + "'" + ")"
                     imagebox.style.backgroundImage=url
                     imagebox.setAttribute("class","imagebox")
+                    imagebox.setAttribute("onmousedown","mousedown(this)")
+                    imagebox.setAttribute("onmouseup","mouseup(this)")
+                    imagebox.setAttribute("onmouseleave","mouseup(this)")
+
+
                     let detailsBox=window.document.createElement("div")
                     detailsBox.setAttribute("class","detailsBox")
                     let detailsWord=window.document.createElement("div")
@@ -336,7 +341,18 @@
         function toIndexPage(){
             location.href="/"
         }
+<<<<<<< HEAD
 
+=======
+        //加入mousedown效果，增加按鈕的感覺
+        function mousedown(i){
+            i.style.opacity="0.8"
+        }
+        //按完後回復原狀
+        function mouseup(i){
+            i.style.opacity="1"
+        }
+>>>>>>> 7aeb658 (fix two problem)
         //測試用
         function print(){
             console.log("test")
@@ -350,16 +366,18 @@
             <div class="loginForm" id="loginForm">
                 <div class="loginTitle">
                     會員登入帳號
-                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"><img src="/static/icon_close.png"></div>
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+
+                    
                 </div>
                 <form id="loginInfoForm" class="loginInfoForm">
                     <input id="inputEmail" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
-                    <input id="inputPassword" class="inputEmailAndPassword"  type="text" name="password" placeholder="  輸入密碼">
+                    <input id="inputPassword" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
                     <div>
-                        <input onclick="sendFormDataToLogin()" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
+                        <input onclick="sendFormDataToLogin()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
                     </div>
                 </form>
-                <div class="loginEndText" onclick="registerAccount()">還沒有帳戶 ?<u> 點此註冊</u></div>
+                <div class="loginEndText" onclick="registerAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">還沒有帳戶 ?<u> 點此註冊</u></div>
                 <div id="message" class="message"></div>
 
             </div>
@@ -370,17 +388,17 @@
             <div class="registerForm" id="registerForm">
                 <div class="loginTitle">
                     註冊會員帳號
-                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"><img src="/static/icon_close.png"></div>
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
                 </div>
                 <form id="loginInfoForm" class="loginInfoForm">
                     <input id="inputNameRegister" class="inputEmailAndPassword" type="text" name="name" placeholder="  輸入姓名">
                     <input id="inputEmailRegister" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
-                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="text" name="password" placeholder="  輸入密碼">
+                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
                     <div>
-                        <input onclick="sendFormDataToRegisterAccount()" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
+                        <input onclick="sendFormDataToRegisterAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
                     </div>
                 </form>
-                <div class="loginEndText" onclick="returnToLoginPage()"><u>已有帳號，回到登入頁面</u></div>
+                <div class="loginEndText" onclick="returnToLoginPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><u>已有帳號，回到登入頁面</u></div>
                 <div id="messageRegister" class="message"></div>
 
             </div>
@@ -391,12 +409,17 @@
     <div class="box">
         <div class="outsideTop"></div>
         <div class="insideTop">
-            <div class="topLeft" onclick="toIndexPage()">台北一日遊</div>
+            <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">台北一日遊</div>
             <div class="topRight">
                 <div class="scheduld">預定行程</div>
+<<<<<<< HEAD
                 <div id="login" class="login" onclick="showloginBackground()">登入/註冊</div>
                 <div id="signOut" class="signOut" onclick="signOutAccount()">登出</div>
 
+=======
+                <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
+                <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
+>>>>>>> 7aeb658 (fix two problem)
             </div>
         </div>
         <div class="outsideTop"></div>
@@ -416,7 +439,7 @@
                                 </div>
                             </form>
                         </div>
-                        <button type="button" class="searchButton" id="searchButton" >
+                        <button onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" type="button" class="searchButton" id="searchButton" >
                     </div>
                 </span>
                 </div>
