@@ -26,10 +26,44 @@ def index():
     
     AccountName="eee"
     add={"address":123,"time":"12:00"}
-    access_token = create_access_token(identity=AccountName,additional_claims=add)
+    access_token = create_access_token(identity=AccountName)
     resp=jsonify({"ok":True})
     print(AccountName)
     print(access_token)
     resp.set_cookie(key="hi",value=access_token,max_age=604800)
     return resp,200
+
+
+@app.put("/api/user/ayth")
+def login():
+	passwordIndex=3
+	email=request.form["email"]
+	password=request.form["password"]
+	connector=mydbPool.get_connection()
+	mycursor=connector.cursor()
+	mycursor.execute("use taipeiAttractions")
+	try:
+		sql="select * from member where email = %s"
+		mycursor.execute(sql,(email,))
+		getDataFromMemberTable=mycursor.fetchone()
+		mycursor.close()
+		connector.close()
+		print(getDataFromMemberTable)
+		if(getDataFromMemberTable==None):
+			return jsonify({"error": True,"message": "email or password is wrong , please try again"}),400
+		if(getDataFromMemberTable[passwordIndex]==password):
+			# resp.set_cookie("access_token")
+			# 將標頭內的set-cookie用來將jwt存到cookie中			
+			resp=jsonify({"ok": True})
+			print(resp)
+			access_token = create_access_token(identity="EEE")
+			print(access_token)
+			# refresh_token= create_refresh_token(identity=email)
+			set_access_cookies(resp,access_token,max_age=604800)
+			# set_refresh_cookies(resp,refresh_token)
+			# resp.set_cookie(key="token",value=access_token,max_age=604800)
+			return resp,200
+	except:
+		return jsonify({ "error":True,"message":"server error"}),500
+
 app.run(port=3000)
