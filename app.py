@@ -9,10 +9,12 @@ from mysql.connector import pooling
 import json
 
 #載入&實例化jwt
+
 from flask_jwt_extended import create_access_token, jwt_required,set_access_cookies,decode_token,get_jwt_identity,unset_jwt_cookies,JWTManager,create_refresh_token,set_refresh_cookies
 jwt = JWTManager(app)
 app.config["JWT_SECRET_KEY"] = "this-is-a-key-in-taipeidAttractionsProgram"  #設定jwt密鑰
 # jwt.init_app(app)
+
 
 
 mydbPool=pooling.MySQLConnectionPool(
@@ -47,6 +49,7 @@ def signNewMember():
 	password=request.form["password"]
 	print(name)
 	if(name=="" or email=="" or password==""):
+
 		inputIsNone={"error": True,"message": "name、email、password shouldn't be empty"}
 		return inputIsNone,400
 	connector=mydbPool.get_connection()
@@ -57,11 +60,11 @@ def signNewMember():
 		mycursor.execute(sql,(email,))
 		getUserInfoFromTable=mycursor.fetchone()
 		if(getUserInfoFromTable != None):
+    
 			responseJs={"error": True,"message": "email is used"}
 			connector.commit()
 			mycursor.close()
 			connector.close()
-			print("1")
 			return responseJs,400
 		sql="insert into member(name,email,password) values (%s,%s,%s)"
 		val=(name,email,password)
@@ -72,6 +75,7 @@ def signNewMember():
 		print("0000")
 		responseJs={"ok":True}
 		return responseJs,200
+
 	except:
 		connector.commit()
 		mycursor.close()
@@ -79,6 +83,7 @@ def signNewMember():
 		print("999")
 		responseJs={"error":True,"message":"註冊時發生錯誤，請重新輸入"}
 		return responseJs,500
+
 
 # 取得當前登入的會員資訊
 @app.get("/api/user/auth")
@@ -138,6 +143,7 @@ def login():
 		errorInfo={ "error":True,"message":"Internal Server Error"}
 		return errorInfo,500
 
+
 #登出帳戶
 @app.delete("/api/user/auth")
 def logout():
@@ -146,6 +152,7 @@ def logout():
 	resp.delete_cookie(key="token")
 	resp.delete_cookie(key="access_token_cookie")
 	resp.delete_cookie(key="refresh_token_cookie")
+
 	return resp,200
 
 #取得景點資料列表

@@ -12,8 +12,8 @@
             buildCatList()
             setListenerToLoadMore()     
             addListenerOnSearchInput()
-
             getMemberInfo()
+
         }
         //用官間字搜尋，並更新內容
         function refreshWithKeyWord(){
@@ -109,6 +109,7 @@
                 for(let i=0;i<dataLength-1;i++){
                     imgUrl=jData["data"][i]["images"]
                     url=imgUrl[0]
+
                     let information=window.document.getElementById("information")
                     let oneInformation=window.document.createElement("div")
                     oneInformation.setAttribute("class","oneInformation")
@@ -335,6 +336,7 @@
         function toIndexPage(){
             location.href="/"
         }
+
         //測試用
         function print(){
             console.log("test")
@@ -394,6 +396,7 @@
                 <div class="scheduld">預定行程</div>
                 <div id="login" class="login" onclick="showloginBackground()">登入/註冊</div>
                 <div id="signOut" class="signOut" onclick="signOutAccount()">登出</div>
+
             </div>
         </div>
         <div class="outsideTop"></div>

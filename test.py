@@ -27,6 +27,7 @@ def index():
     AccountName="eee"
     add={"address":123,"time":"12:00"}
     access_token = create_access_token(identity=AccountName)
+
     resp=jsonify({"ok":True})
     print(AccountName)
     print(access_token)
@@ -65,5 +66,6 @@ def login():
 			return resp,200
 	except:
 		return jsonify({ "error":True,"message":"server error"}),500
+
 
 app.run(port=3000)
