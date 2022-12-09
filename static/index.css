@@ -10,6 +10,139 @@ body{
     height: 100%;
     margin: 0px;
 }
+.backgroundFilter{
+    display:none;
+    position:fixed;
+    height: 100%;
+    width: 100%;
+    background-color: #2b3234;
+    opacity: 30%;
+    top: -50px;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    z-index: 10000;
+    align-items: center;
+    /* justify-items: center; */
+    justify-content: center;
+
+}
+.registerLayout{
+    position:fixed;
+    display: none;    
+    height: 100%;
+    width: 100%;
+    /* align-items: center; */
+    /* background-color: #ffffff; */
+    justify-content: center;  
+    z-index: 10001;
+}
+.registerBox{
+    width: 340px;
+    height: 350px;
+    /* background-color: */
+    background-image: linear-gradient(to right,#66AABB,#337788);
+    opacity: 100%;
+    margin-top: 100px;
+    top: 150px;
+    /* border-top-right-radius: 10px;
+    border-top-left-radius: 10px; */
+    border-radius: 10px;
+}
+.registerForm{
+    display: block;
+    width: 340px;
+    height: 340px;
+    margin-top: 10px;
+    background-color: white;
+    border: none;
+    border-end-end-radius: 10px;
+    border-end-start-radius:10px ;
+}
+
+
+.loginLayout{
+    position:fixed;
+    display: none;    
+    height: 100%;
+    width: 100%;
+    /* align-items: center; */
+    /* background-color: #ffffff; */
+    justify-content: center;  
+    z-index: 10001;
+}
+
+.loginBox{
+    width: 340px;
+    height: 275px;
+    /* background-color: */
+    background-image: linear-gradient(to right,#66AABB,#337788);
+    opacity: 100%;
+    margin-top: 100px;
+    top: 150px;
+    /* border-top-right-radius: 10px;
+    border-top-left-radius: 10px; */
+    border-radius: 10px;
+}
+.loginTitle{
+    color: #666666;
+    font-size: 24px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    padding-top: 5px;
+}
+.closeButton{
+    position: relative;
+    left:80px;    
+}
+.loginInfoForm{
+    text-align: center;
+    line-height: 4;
+}
+.inputEmailAndPassword{
+    height: 47px;
+    width: 310px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CCCCCC;
+}
+.inputSubmit{
+    height: 47px;
+    width: 318px;
+    border-radius: 5px;
+    border-style:1px;
+    background-color: #448899;
+    color: white;
+    border: none;
+}
+.loginEndText{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.message{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    font-size: small;
+
+}
+
+
+.loginForm{
+    display: block;
+    width: 340px;
+    height: 280px;
+    margin-top: 10px;
+    background-color: white;
+    border: none;
+    border-end-end-radius: 10px;
+    border-end-start-radius:10px ;
+}
+
+
+
 /* footer固定在底部 */
 .wrapper {
     min-height: 100%; /*外層高度100%*/
@@ -56,8 +189,11 @@ body{
 .scheduld{
     display: inline-block;
 }
-.login{
-    display: inline-block;
+.signOut{
+    display: none;
+    padding: 5px;
+    color: #666666;
+
 }
 /* 設定歡迎頁面及搜尋 */
 .boxWelcome{
@@ -331,6 +467,20 @@ body{
     font-weight: bolder;
     margin:20px;
 }
+.attractionName:hover{
+    text-shadow:
+    0 0 5px rgba(247, 245, 41,.1),
+    0 0 10px rgba(247, 245, 41,1),
+    0 0 20px rgba(247, 245, 41,1),
+    0 0 40px rgba(247, 245, 41,1);
+    animation:neon-shine 2s linear infinite;
+}
+@keyframes neon-shine{
+    0%{opacity:1;}
+    90%{opacity:0;}
+    100%{
+    color:#232323;}
+  }  
 .catAtMrt{
     margin-left: 20px;
     margin-bottom: 10px;

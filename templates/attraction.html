@@ -11,6 +11,7 @@
         let displayPhotoIndex=0
         let allPhotoUrlList=[]
         async function init(){
+            getMemberInfo()
             await buildCatList()
         }
         async function buildCatList(){
@@ -108,21 +109,202 @@
             afterPhoto.style.display="block"
             afterPhoto.style.opacity=1
         }
+        //網頁載入時取得會員資料
+        function getMemberInfo(){
+            fetch("/api/user/auth",{
+                method:"get"
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                if(data!=null){
+                login=window.document.getElementById("login")
+                signOut=window.document.getElementById("signOut")
+                login.style.display="none"
+                signOut.style.display="inline-block"
+                }
+            })
+        }
+
+
+        // 打開登入帳號介面
+        function showloginBackground(){
+            backgroundFilter=window.document.getElementById("backgroundFilter")
+            backgroundFilter.style.display='flex'
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='flex'
+        }
+        // 發送登入帳號請求
+        function sendFormDataToLogin(){
+            event.preventDefault()
+            let fd = new FormData()
+            fd.append("email",document.getElementById("inputEmail").value)
+            fd.append("password",document.getElementById("inputPassword").value)
+            fetch("/api/user/auth",{
+                method:'put',
+                body:fd,
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                if("error" in data){
+                    message=document.getElementById("message")
+                    message.innerHTML=data["message"]
+                }
+                if("ok" in data){
+                    message=document.getElementById("message")
+                    message.innerHTML="登入成功"
+                    login=window.document.getElementById("login")
+                    signOut=window.document.getElementById("signOut")
+                    login.style.display="none"
+                    signOut.style.display="inline-block"
+                    backgroundFilter=window.document.getElementById("backgroundFilter")
+                    backgroundFilter.style.display='none'
+                    loginLayout=window.document.getElementById("loginLayout")
+                    loginLayout.style.display='none'
+
+                }
+            })
+        }
+        // 發送創建帳號請求
+        function sendFormDataToRegisterAccount(){
+            event.preventDefault()
+            let fd=new FormData()
+            fd.append("name",document.getElementById("inputNameRegister").value)
+            fd.append("email",document.getElementById("inputEmailRegister").value)
+            fd.append("password",document.getElementById("inputPasswordRegister").value)
+            fetch("/api/user",{
+                method:'post',
+                body:fd,
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log("error" in data)
+
+                if("error" in data){
+                    message=document.getElementById("messageRegister")
+                    message.innerHTML=data["message"]
+                }
+                if("ok" in data){
+                    message=document.getElementById("messageRegister")
+                    message.innerHTML="新帳號註冊成功"
+                }
+            })
+
+        }
+        // 發送登出請求
+        function signOutAccount(){
+            fetch("/api/user/auth",{
+                method:"delete"
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                if("ok" in data){
+                    login=window.document.getElementById("login")
+                    signOut=window.document.getElementById("signOut")
+                    login.style.display="inline-block"
+                    signOut.style.display="none"
+                    message=document.getElementById("message")
+                    message.innerHTML=""
+                }
+                
+            })
+        }
+        // 關閉登入、創建帳號介面
+        function closeLoginWindow(){
+            backgroundFilter=window.document.getElementById("backgroundFilter")
+            backgroundFilter.style.display='none'
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='none'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='none'
+        }
+        // 切換重創建帳號介面
+        function registerAccount(){
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='none'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='flex'
+        }
+        // 切換回登入介面
+        function returnToLoginPage(){
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='flex'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='none'
+        }
+        //加入mousedown效果，增加按鈕的感覺
+        function mousedown(i){
+            i.style.opacity="0.8"
+        }
+        //按完後回復原狀
+        function mouseup(i){
+            i.style.opacity="1"
+        }
+        // 回首頁
+        function toIndexPage(){
+            location.href="/"
+        }
     </script>
 </head>
 <body style="color: #666666;" onload="init()">
+    <div id="backgroundFilter" class="backgroundFilter"></div>
+    <div id="loginLayout" class="loginLayout">
+        <div id="loginBox" class="loginBox" >
+            <div class="loginForm" id="loginForm">
+                <div class="loginTitle">
+                    會員登入帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputEmail" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPassword" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToLogin()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="registerAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">還沒有帳戶 ?<u> 點此註冊</u></div>
+                <div id="message" class="message"></div>
+
+            </div>
+        </div>
+    </div>
+    <div id="registerLayout" class="registerLayout">
+        <div id="registerBox" class="registerBox" >
+            <div class="registerForm" id="registerForm">
+                <div class="loginTitle">
+                    註冊會員帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"  onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputNameRegister" class="inputEmailAndPassword" type="text" name="name" placeholder="  輸入姓名">
+                    <input id="inputEmailRegister" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToRegisterAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="returnToLoginPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><u>已有帳號，回到登入頁面</u></div>
+                <div id="messageRegister" class="message"></div>
+
+            </div>
+        </div>
+    </div>
     <div class="box">
         <div class="outsideTop"></div>
         <div class="insideTop">
-            <div class="topLeft">台北一日遊</div>
+            <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)">台北一日遊</div>
             <div class="topRight">
                 <div class="scheduld">預定行程</div>
-                <div class="login">登入/註冊</div>
+                <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
+                <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
             </div>
         </div>
         <div class="outsideTop"></div>
     </div>
     <div class="wrapper">
+<!-- -------------分隔線中間為此葉面特別內容，其他為固定板型---------------- -->
+
         <div class="spaceUnderTopBar"></div>
         <div class="attractionPageContentBox">
             <div class="attractionContentOutside"></div>
@@ -130,14 +312,14 @@
                 <div class="photoAndBooking">
                     <div class="photos" id="photos">
                         <div class="leftPhotoButtonBox" id="leftPhotoButtonBox">
-                            <button id="leftPhotoButtonItem" class="leftPhotoButtonItem" onclick="changePhoto(-1)">
+                            <button id="leftPhotoButtonItem" class="leftPhotoButtonItem" onclick="changePhoto(-1)" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">
                                 <img src="/static/btn_leftArrow.png">
                             </button>
                         </div>
                         <div class="underbubbleSpace" id="underbubbleSpace">
                         </div>
                         <div class="rightPhotoButtonBox" id="rightPhotoButtonBox">
-                            <button id="rightPhotoButtonItem" class="rightPhotoButtonItem" onclick="changePhoto(1)">
+                            <button id="rightPhotoButtonItem" class="rightPhotoButtonItem" onclick="changePhoto(1)" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">
                                 <img src="/static/btn_rightArrow.png">
                             </button>
                         </div>
@@ -160,7 +342,7 @@
                                 </span>
                             </div>
                             <div>導覽費用：<span id="showPrice"></span></div>
-                            <input type="button" value="開始預約行程" class="formSubmitButton" >
+                            <input onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" type="button" value="開始預約行程" class="formSubmitButton" >
                         </form>
                     </div>
                 </div>
@@ -179,6 +361,8 @@
             </div>
             <div class="attractionContentOutside" ></div>
         </div>
+<!-- ----------------------------- -->
+
     </div>
     <div class="footer" id="footer">
         <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>

@@ -9,10 +9,12 @@ from mysql.connector import pooling
 import json
 
 #載入&實例化jwt
-from flask_jwt_extended import *
-jwt = JWTManager()
-app.config["JWT-SECRET-KEY"] = "this-is-a-key-in-taipeidAttractionsProgram"  #設定jwt密鑰
-jwt.init_app(app)
+
+from flask_jwt_extended import create_access_token, jwt_required,set_access_cookies,decode_token,get_jwt_identity,unset_jwt_cookies,JWTManager,create_refresh_token,set_refresh_cookies
+jwt = JWTManager(app)
+app.config["JWT_SECRET_KEY"] = "this-is-a-key-in-taipeidAttractionsProgram"  #設定jwt密鑰
+# jwt.init_app(app)
+
 
 
 mydbPool=pooling.MySQLConnectionPool(
@@ -45,16 +47,20 @@ def signNewMember():
 	name=request.form["name"]
 	email=request.form["email"]
 	password=request.form["password"]
-	if(name | email | password == None):
+	print(name)
+	if(name=="" or email=="" or password==""):
+
 		inputIsNone={"error": True,"message": "name、email、password shouldn't be empty"}
 		return inputIsNone,400
 	connector=mydbPool.get_connection()
 	mycursor=connector.cursor()
+	mycursor.execute("use taipeiAttractions")
 	try:
-		sql = "select email from member where email =%s"
+		sql = "select * from member where email = %s"
 		mycursor.execute(sql,(email,))
-		getNameFromTable=mycursor.fetchone()
-		if(getNameFromTable != None):
+		getUserInfoFromTable=mycursor.fetchone()
+		if(getUserInfoFromTable != None):
+    
 			responseJs={"error": True,"message": "email is used"}
 			connector.commit()
 			mycursor.close()
@@ -66,72 +72,87 @@ def signNewMember():
 		connector.commit()
 		mycursor.close()
 		connector.close()
-		responseJs={"ok":True},200
-		return responseJs
+		print("0000")
+		responseJs={"ok":True}
+		return responseJs,200
+
 	except:
 		connector.commit()
 		mycursor.close()
 		connector.close()
-		responseJs={"error":True,"message":"註冊時發生錯誤，請重新輸入"},500
+		print("999")
+		responseJs={"error":True,"message":"註冊時發生錯誤，請重新輸入"}
+		return responseJs,500
+
 
 # 取得當前登入的會員資訊
 @app.get("/api/user/auth")
 def getSigninMemberData():
-	if "email" in session:
-		email=session["email"]
-		connector=mydbPool.get_connection()
-		mycursor=connector.cursor()
-		try:
-			sql = "select (id,name,email) from member where email = %s"
-			mycursor.execute(sql,(email,))
-			memberData=mycursor.fetchone()
-			mycursor.close()
-			connector.close()
-			print(memberData)
-			return memberData,200
-		except:
-			mycursor.close()
-			connector.close()
-			return "null",200
-	else:
+	try:
+		token=request.cookies["token"]
+	except:
+		print("沒有cookie，名為token")
 		return "null",200
+	# 驗證token是否有被竄改
+	try:
+		# 將token解密，取出存放在payload內的資訊
+		eee=decode_token(token)
+		info={"data":eee["data"]}
+		return info,200
+	except:
+		return "token 驗證失敗",422
 
 # 登入會員帳戶
-@app.put("/api/user/ayth")
+@app.put("/api/user/auth")
 def login():
+	passwordIndex=3
+	print(request.data)
+	print(request.form["email"])
 	email=request.form["email"]
 	password=request.form["password"]
 	connector=mydbPool.get_connection()
 	mycursor=connector.cursor()
-	sql="select * from member where email = %s"
+	mycursor.execute("use taipeiAttractions")
 	try:
+		sql="select * from member where email = %s"
 		mycursor.execute(sql,(email,))
 		getDataFromMemberTable=mycursor.fetchone()
 		mycursor.close()
 		connector.close()
 		print(getDataFromMemberTable)
 		if(getDataFromMemberTable==None):
-			return jsonify({"error": True,"message": "email or password is wrong , please try again"}),400
-		if(getDataFromMemberTable["password"]==password):
-			# resp.set_cookie("access_token")
+			errorInfo={ "error":True,"message":" account is not active , please register an account first"}
+			return errorInfo,500
+		if(getDataFromMemberTable[passwordIndex]==password):
+			clientInfo={"data":{"id":getDataFromMemberTable[0],"name":getDataFromMemberTable[1],"email":getDataFromMemberTable[2]}}
 			# 將標頭內的set-cookie用來將jwt存到cookie中			
 			resp=jsonify({"ok": True})
-			access_token = create_access_token(identity=email)
-			refresh_token= create_refresh_token(identity=email)
-			set_access_cookies(resp,access_token,max_age=604800)
-			set_refresh_cookies(resp,refresh_token)
-			
+			print(resp)
+			# 將clientInfo作為附加資訊存入以jwt嘉蜜的token內
+			access_token = create_access_token(identity=getDataFromMemberTable[1],additional_claims=clientInfo)
+			# token=access_token
+			# refresh_token= create_refresh_token(identity=email)
+			# set_access_cookies(resp,access_token,max_age=604800)
+			# set_refresh_cookies(resp,refresh_token)
 			resp.set_cookie(key="token",value=access_token,max_age=604800)
 			return resp,200
+		else:
+			errorInfo={"error": True,"message": "password is wrong , please try again"}
+			return errorInfo,400
 	except:
-		return jsonify({ "error":True,"message":"server error"}),500
+		errorInfo={ "error":True,"message":"Internal Server Error"}
+		return errorInfo,500
+
 
 #登出帳戶
 @app.delete("/api/user/auth")
 def logout():
 	# 將cookie中的jwt移除
 	resp=jsonify({'ok':True})
-	unset_jwt_cookies(resp)
+	resp.delete_cookie(key="token")
+	resp.delete_cookie(key="access_token_cookie")
+	resp.delete_cookie(key="refresh_token_cookie")
+
 	return resp,200
 
 #取得景點資料列表
