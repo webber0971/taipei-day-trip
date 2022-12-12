@@ -291,8 +291,10 @@ def getUnconfirmedItinerary():
 			connector=mydbPool.get_connection()
 			mycursor=connector.cursor()
 			mycursor.execute("use taipeiAttractions")
-			sql="select * from orderList inner join taipeiattractionsdata on orderlist.order_id = taipeiattractionsdata.id where member_id = %s"
+			print("11")
+			sql="select * from orderList inner join taipeiattrActionsdata on orderList.order_id = taipeiattrActionsdata.id where member_id = %s"
 			val=id
+			print("22")
 			mycursor.execute(sql,(val,))
 			nopaidList=mycursor.fetchall()
 			connector.commit()
