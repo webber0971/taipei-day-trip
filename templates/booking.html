@@ -44,86 +44,105 @@
             })
             .then((res)=>res.json())
             .then((data)=>{
-                console.log(data["data"].length)
+                if(data==null){
+                    console.log("eeee")
+                }
+                console.log(data)
+
                 let bookingMid=window.document.getElementById("bookingMid")
 
                 let bookingAttractionInfo1=window.document.createElement("div")
                 bookingAttractionInfo1.setAttribute("class","bookingAttractionInfoTitle")
                 
-                let bookingTitle=window.document.createElement("bookingTitle")
+                let bookingTitle=window.document.createElement("div")
                 bookingTitle.setAttribute("class","bookingTitle")
                 bookingTitle.innerHTML="您好，"+ userName+"，期待預定的行程如下 :"
                 bookingMid.appendChild(bookingAttractionInfo1)
                 bookingAttractionInfo1.appendChild(bookingTitle)
 
-                for(let i=0;i<data["data"].length;i++){
-                    let bookingMid1=window.document.getElementById("bookingMid")
-                    
+                if(data == null){
                     let bookingAttractionInfo=window.document.createElement("div")
                     bookingAttractionInfo.setAttribute("class","bookingAttractionInfo")
+                    bookingAttractionInfo.innerHTML="目前沒有任何預定的行程"
+                    bookingMid.appendChild(bookingAttractionInfo)
+                    let bookingEndInfo=window.document.getElementById("bookingEndInfo")
+                    let bookingCreditInfo=window.document.getElementById("bookingCreditInfo")
+                    let bookingMemberInfo=window.document.getElementById("bookingMemberInfo")
+                    let bookinghr1=window.document.getElementById("hr1")
+                    bookingEndInfo.style.display="none"
+                    bookingCreditInfo.style.display="none"
+                    bookingMemberInfo.style.display="none"
+                    bookinghr1.style.display="none"
+                }else{
+                    for(let i=0;i<data["data"].length;i++){
+                        let bookingMid1=window.document.getElementById("bookingMid")
+                        
+                        let bookingAttractionInfo=window.document.createElement("div")
+                        bookingAttractionInfo.setAttribute("class","bookingAttractionInfo")
 
-                    let bookingAttractionInfoDetail=window.document.createElement("div")
-                    bookingAttractionInfoDetail.setAttribute("class","bookingAttractionInfoDetail")
-                    let bookingImage=window.document.createElement("div")
-                    bookingImage.setAttribute("class","bookingImage")
-                    bookingImage.style.backgroundImage="url("+data["data"][i]["attraction"]["image"]+")"
-                    let bookingAttractionInfoDetailText=window.document.createElement("bookingAttractionInfoDetailText")
-                    bookingAttractionInfoDetailText.setAttribute("class","bookingAttractionInfoDetailText")
+                        let bookingAttractionInfoDetail=window.document.createElement("div")
+                        bookingAttractionInfoDetail.setAttribute("class","bookingAttractionInfoDetail")
+                        let bookingImage=window.document.createElement("div")
+                        bookingImage.setAttribute("class","bookingImage")
+                        bookingImage.style.backgroundImage="url("+data["data"][i]["attraction"]["image"]+")"
+                        let bookingAttractionInfoDetailText=window.document.createElement("bookingAttractionInfoDetailText")
+                        bookingAttractionInfoDetailText.setAttribute("class","bookingAttractionInfoDetailText")
 
-                    let attractionName=window.document.createElement("div")
-                    let attractionNameText="台北一日遊 : "+data["data"][i]["attraction"]["name"]
-                    attractionName.innerHTML=attractionNameText
+                        let attractionName=window.document.createElement("div")
+                        let attractionNameText="台北一日遊 : "+data["data"][i]["attraction"]["name"]
+                        attractionName.innerHTML=attractionNameText
 
-                    let attractionDate=window.document.createElement("div")
-                    let attractionDateText="日期 : "+ data["data"][i]["date"]
-                    attractionDate.innerHTML=attractionDateText
+                        let attractionDate=window.document.createElement("div")
+                        let attractionDateText="日期 : "+ data["data"][i]["date"]
+                        attractionDate.innerHTML=attractionDateText
 
-                    let attractionTime=window.document.createElement("div")
-                    let attractionTimeText="時間 : "+data["data"][i]["time"]
-                    attractionTime.innerHTML=attractionTimeText
-                    
-                    let attractionPrice=window.document.createElement("div")
-                    let attractionPriceText="費用 : "+String(data["data"][i]["price"]) 
-                    attractionPrice.innerHTML=attractionPriceText
-                    allPrice=allPrice+data["data"][i]["price"]
+                        let attractionTime=window.document.createElement("div")
+                        let attractionTimeText="時間 : "+data["data"][i]["time"]
+                        attractionTime.innerHTML=attractionTimeText
+                        
+                        let attractionPrice=window.document.createElement("div")
+                        let attractionPriceText="費用 : "+String(data["data"][i]["price"]) 
+                        attractionPrice.innerHTML=attractionPriceText
+                        allPrice=allPrice+data["data"][i]["price"]
 
-                    let attractionAddress=window.document.createElement("div")
-                    let attractionAddressText="地點 : "+data["data"][i]["attraction"]["address"]
-                    attractionAddress.innerHTML=attractionAddressText
+                        let attractionAddress=window.document.createElement("div")
+                        let attractionAddressText="地點 : "+data["data"][i]["attraction"]["address"]
+                        attractionAddress.innerHTML=attractionAddressText
 
-                    let bookingDeleteIcon=window.document.createElement("div")
-                    bookingDeleteIcon.setAttribute("class","bookingDeleteIcon")
-                    let deleteIcon=window.document.createElement("div")
-                    deleteIcon.setAttribute("class","deleteIcon")
-                    deleteIcon.setAttribute("value",data["data"][i]["order_id"])
-                    deleteIcon.addEventListener("click",function(){
-                        console.log(data["data"][i]["order_id"])
-                        deleteBookingOrder(data["data"][i]["order_id"])
+                        let bookingDeleteIcon=window.document.createElement("div")
+                        bookingDeleteIcon.setAttribute("class","bookingDeleteIcon")
+                        let deleteIcon=window.document.createElement("div")
+                        deleteIcon.setAttribute("class","deleteIcon")
+                        deleteIcon.setAttribute("value",data["data"][i]["order_id"])
+                        deleteIcon.addEventListener("click",function(){
+                            console.log(data["data"][i]["order_id"])
+                            deleteBookingOrder(data["data"][i]["order_id"])
 
-                    })
-                    bookingMid1.appendChild(bookingAttractionInfo)
-                    bookingAttractionInfo.appendChild(bookingAttractionInfoDetail)
-                    bookingAttractionInfoDetail.appendChild(bookingImage)
-                    bookingAttractionInfoDetail.appendChild(bookingAttractionInfoDetailText)
-                    bookingAttractionInfoDetail.appendChild(bookingDeleteIcon)
-                    bookingAttractionInfoDetailText.appendChild(attractionName)
-                    bookingAttractionInfoDetailText.appendChild(attractionDate)
-                    bookingAttractionInfoDetailText.appendChild(attractionTime)
-                    bookingAttractionInfoDetailText.appendChild(attractionPrice)
-                    bookingAttractionInfoDetailText.appendChild(attractionAddress)
-                    bookingDeleteIcon.appendChild(deleteIcon)
-                    console.log(deleteIcon.getAttribute("value"))
+                        })
+                        bookingMid1.appendChild(bookingAttractionInfo)
+                        bookingAttractionInfo.appendChild(bookingAttractionInfoDetail)
+                        bookingAttractionInfoDetail.appendChild(bookingImage)
+                        bookingAttractionInfoDetail.appendChild(bookingAttractionInfoDetailText)
+                        bookingAttractionInfoDetail.appendChild(bookingDeleteIcon)
+                        bookingAttractionInfoDetailText.appendChild(attractionName)
+                        bookingAttractionInfoDetailText.appendChild(attractionDate)
+                        bookingAttractionInfoDetailText.appendChild(attractionTime)
+                        bookingAttractionInfoDetailText.appendChild(attractionPrice)
+                        bookingAttractionInfoDetailText.appendChild(attractionAddress)
+                        bookingDeleteIcon.appendChild(deleteIcon)
+                        console.log(deleteIcon.getAttribute("value"))
 
-                    let bookingMid=window.document.getElementById("bookingMid")
-                    let hr=window.document.createElement("hr")
-                    hr.setAttribute("class","hrColor")
-                    bookingMid.appendChild(hr)
-                }
-                let allPriceText=window.document.getElementById("allPriceText")
-                allPriceText.textContent="新台幣 "+String(allPrice)+"元"
-                if(data==null){
-                    // 導航到頁面顯尚未擁有預定行程
-                    
+                        let bookingMid=window.document.getElementById("bookingMid")
+                        let hr=window.document.createElement("hr")
+                        hr.setAttribute("class","hrColor")
+                        bookingMid.appendChild(hr)
+                    }
+                    let allPriceText=window.document.getElementById("allPriceText")
+                    allPriceText.textContent="新台幣 "+String(allPrice)+"元"
+                    if(data==null){
+                        // 導航到頁面顯尚未擁有預定行程
+                        
+                    }
                 }
             })
         } 
@@ -213,6 +232,7 @@
                     signOut.style.display="none"
                     message=document.getElementById("message")
                     message.innerHTML=""
+                    location=location
                 }
                 
             })
@@ -344,7 +364,7 @@
                 </div>
                 <div class="bookingRight"></div>
             </div>
-            <div class="bookingMemberInfo">
+            <div id="bookingMemberInfo" class="bookingMemberInfo">
                 <div class="bookingMemberInfoLeft"></div>
                 <div class="bookingMemberInfoMid">
                     <div class="bookingMemberInfoTitle">您的聯絡資訊</div>
@@ -358,7 +378,7 @@
                 </div>
                 <div class="bookingMemberInfoRight"></div>
             </div>
-            <div class="bookingMemberInfo">
+            <div id="bookingCreditInfo" class="bookingMemberInfo">
                 <div class="bookingMemberInfoLeft"></div>
                 <div class="bookingMemberInfoMid">
                     <div class="bookingCreditInfo">信用卡付款資訊</div>
@@ -370,8 +390,8 @@
                 </div>
                 <div class="bookingMemberInfoRight"></div>
             </div>
-            <hr class="hrColor">
-            <div class="bookingEndInfo">
+            <hr id="hr1" class="hrColor">
+            <div id="bookingEndInfo" class="bookingEndInfo">
                 <div class="bookingMemberInfoLeft"></div>
                 <div class="bookingEndMid">
                     <div></div>
