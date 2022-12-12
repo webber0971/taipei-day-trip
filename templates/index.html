@@ -8,6 +8,10 @@
         <title>index2</title>
     <script>
         // 連線初始化資料
+        let userName =""
+
+
+
         function init(){
             buildCatList()
             setListenerToLoadMore()     
@@ -223,6 +227,7 @@
                 signOut=window.document.getElementById("signOut")
                 login.style.display="none"
                 signOut.style.display="inline-block"
+                userName=data["data"]["name"]
                 }
             })
         }
@@ -282,7 +287,6 @@
             .then((res)=>res.json())
             .then((data)=>{
                 console.log("error" in data)
-
                 if("error" in data){
                     message=document.getElementById("messageRegister")
                     message.innerHTML=data["message"]
@@ -292,7 +296,6 @@
                     message.innerHTML="新帳號註冊成功"
                 }
             })
-
         }
         // 發送登出請求
         function signOutAccount(){
@@ -348,6 +351,13 @@
         //按完後回復原狀
         function mouseup(i){
             i.style.opacity="1"
+        }
+        function directToBooking(){
+            if(userName==""){
+                showloginBackground()
+            }else{
+                location.href="/booking"
+            }
         }
         //測試用
         function print(){
@@ -407,7 +417,7 @@
         <div class="insideTop">
             <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">台北一日遊</div>
             <div class="topRight">
-                <div class="scheduld">預定行程</div>
+                <div class="scheduld" onclick="directToBooking()">預定行程</div>
                 <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
                 <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
             </div>

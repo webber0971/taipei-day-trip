@@ -7,6 +7,7 @@ app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 from mysql.connector import pooling
 import json
+import datetime
 
 #載入&實例化jwt
 
@@ -40,6 +41,10 @@ def booking():
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
+
+@app.route("/test")
+def layout():
+	return render_template("layout.html")
 
 # 註冊一個新的會員
 @app.post("/api/user")
@@ -273,8 +278,130 @@ def getCategoriesList():
 		mycursor.close()
 		connector.close()
 		return jsonify({"error":True,"message":"伺服器錯誤"}),500
-# @app.get("api/test")
-# def test():
-# 	return 
+
+
+# 取得預定行程
+@app.get("/api/booking")
+def getUnconfirmedItinerary():
+	if(request.cookies.__contains__("token")):
+		try:
+			token=request.cookies["token"]
+			dataInCookie=decode_token(token)
+			id=dataInCookie["data"]["id"]
+			connector=mydbPool.get_connection()
+			mycursor=connector.cursor()
+			mycursor.execute("use taipeiAttractions")
+			sql="select * from orderList inner join taipeiattractionsdata on orderlist.order_id = taipeiattractionsdata.id where member_id = %s"
+			val=id
+			mycursor.execute(sql,(val,))
+			nopaidList=mycursor.fetchall()
+			connector.commit()
+			mycursor.close()
+			connector.close()
+			if(len(nopaidList)==0):
+				return "null",200
+			resList=[]
+			for i in nopaidList:
+				image=i[20].split("http")
+				info={
+					"attraction":{
+						"id":i[1],
+						"name":i[10],
+						"address":i[25],
+						"image":"http"+image[1]
+					},
+					"order_id":i[0],
+					"date":i[3].isoformat(),
+					"time":i[4],
+					"price":i[5],
+					"paid":i[6]
+				}
+				print(type(i[3]))
+				resList.append(info)
+			resp={"data":resList}			
+			# return resList[0],200
+			print(resp)
+			return resp,200
+		except:
+			connector.commit()
+			mycursor.close()
+			connector.close()
+			errorInfo={"error":True,"message":"伺服器發生錯誤，讀取db失敗"}
+			return errorInfo,400
+	else:
+		errorInfo={"error": True,"message": "尚未登入，請先登入帳號"}
+		return errorInfo,403
+
+
+#建立新的預定行程
+@app.post("/api/booking")
+def buildNewItinerary():
+	try:
+		if(not request.cookies.__contains__("token")):
+			print("沒有cookie，名為token")
+			errorInfo={"error":True,"message":"請先登入帳號"}
+			return errorInfo,403
+		# 將token解密，取出存放在payload內的資訊
+		token=request.cookies["token"]
+		dataInCookie=decode_token(token)
+		name=dataInCookie["data"]["name"]
+		id=dataInCookie["data"]["id"]
+		email=dataInCookie["data"]["email"]
+
+		time=request.form["time"]
+		date=request.form["date"]
+		price=request.form["price"]
+		attractionId=request.form["attractionId"]
+		# paid=request.form["paid"]
+		print(attractionId)
+		try:
+			connector=mydbPool.get_connection()
+			mycursor=connector.cursor()
+			mycursor.execute("use taipeiAttractions")
+			sql="insert into orderList(attraction_id,member_id,date,time,price) values (%s,%s,%s,%s,%s)"
+			val=(attractionId,id,date,time,price)
+			mycursor.execute(sql,val)
+			connector.commit()
+			mycursor.close()
+			connector.close()
+			print(val)
+			return {"ok":True},200
+		except:
+			connector.commit()
+			mycursor.close()
+			connector.close()
+			errorInfo={"error":True,"nessage":"寫入db時發生錯誤"}
+			return errorInfo,400
+	except:
+		errorInfo={"error":True,"message":"伺服器錯誤"}
+		return errorInfo,500
+
+
+# 刪除目前的預定行程
+@app.delete("/api/booking")
+def deleteThisItinerary():
+	try:
+		if(not request.cookies.__contains__("token")):
+			print("沒有cookie，名為token")
+			errorInfo={"error":True,"message":"請先登入帳號"}
+			return errorInfo,403
+		token=request.cookies["token"]
+		dataInCookie=decode_token(token)
+		memberId=dataInCookie["data"]["id"]
+		orderId=request.form["order_id"]
+		connector=mydbPool.get_connection()
+		mycursor=connector.cursor()
+		mycursor.execute("use taipeiAttractions")
+		sql="delete from orderList where order_id = %s and member_id = %s"
+		val=(orderId,memberId)
+		mycursor.execute(sql,val)
+		connector.commit()
+		mycursor.close()
+		connector.close()
+		return {"ok":True},200
+
+	except:
+		return "伺服器發生錯誤",400
+
 
 app.run(host="0.0.0.0",port=8888)

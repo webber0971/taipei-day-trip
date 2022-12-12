@@ -1,109 +1,399 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <style>
-             * {
-                margin: 0;
-                padding: 0;
-            }
-      
-            li {
-                list-style-type: none;
-            }
-      
-            .tab {
-                width: 978px;
-                margin: 100px auto;
-            }
-      
-            .tab_list {
-                height: 39px;
-                border: 1px solid #ccc;
-                background-color: #f1f1f1;
-            }
-      
-            .tab_list li {
-                float: left;
-                height: 39px;
-                line-height: 39px;
-                padding: 0 20px;
-                text-align: center;
-                cursor: pointer;
-            }
-      
-            .tab_list .current {
-                background-color: #c81623;
-                color: #fff;
-            }
-      
-            .item_info {
-                padding: 20px 0 0 20px;
-            }
-      
-            .item {
-                display: none;
-            }
-            img {
-                width: 978px;
-                height: 550px;
-            }
-        </style>
-        <script src="jquery.min.js"></script>
-    </head>
-    <body> 
-        <div class="tab">  
-            <div class="tab_list"> 
-                <ul>
-                    <li class="current">萝莉</li>
-                    <li>御姐</li>
-                    <li>拔剑少女</li>
-                </ul>
-            </div>
-        <div class="tab_con">
-            <div class="item" style="display: block;"><img src="image/luoli.jpg" /></a></div>
-            <div class="item"><a href="#"><img src="image/yujie.jpg" /></a></div>
-            <div class="item"><a href="#"><img src="image/shaonv.jpg" /></a></div>
-        </div>
-        </div>  
-
-        <script>
-            //获取元素
-            var tab_list = document.querySelector('.tab_list');
-            var lis = tab_list.querySelectorAll('li');
-            var items = document.querySelectorAll('.item');
-            //for循环绑定点击事件
-            for (var i = 0; i<lis.length; i++) {
-                //给li设置索引号
-                lis[i].setAttribute('index', i);
-                lis[i].onclick = function() {
-                    //其余li清除class
-                    for(var i =0; i<lis.length; i++) {
-                        lis[i].className = '';
-                    }
-                    //留下被点击的
-                    this.className = 'current';
-                    //显示内容
-                    var index = this.getAttribute('index');
-                    //隐藏其他，显示被点击的对应的item
-                    for (var i = 0; i < items.length; i++){
-                        items[i].style.display = 'none';
-                    }
-           
-                    items[index].style.display = 'block';
-              
-              
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/index.css">
+    <title>attractiona</title>
+    <script>
+        let photosCount=0
+        let displayPhotoIndex=0
+        let allPhotoUrlList=[]
+        let userName=""
+        let allPrice=0
+        //登入頁面初始狀態取得
+        async function init(){
+            getMemberInfo()
+            await getMemberOrderInfo()
+        }
+        //網頁載入時取得會員資料
+        function getMemberInfo(){
+            fetch("/api/user/auth",{
+                method:"get"
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                if(data!=null){
+                login=window.document.getElementById("login")
+                signOut=window.document.getElementById("signOut")
+                login.style.display="none"
+                signOut.style.display="inline-block"
+                userName=data["data"]["name"]
+                // window.document.getElementById("bookingTitle").innerHTML="您好，"+ data["data"]["name"]+"，期待預定的行程如下 :"
+                }else{
+                    location.href="/"
                 }
+            })
+        }
+        //載入時取得訂單資訊
+        function getMemberOrderInfo(){
+            fetch("/api/booking",{
+                method:"get"
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data["data"].length)
+                let bookingMid=window.document.getElementById("bookingMid")
+
+                let bookingAttractionInfo1=window.document.createElement("div")
+                bookingAttractionInfo1.setAttribute("class","bookingAttractionInfoTitle")
+                
+                let bookingTitle=window.document.createElement("bookingTitle")
+                bookingTitle.setAttribute("class","bookingTitle")
+                bookingTitle.innerHTML="您好，"+ userName+"，期待預定的行程如下 :"
+                bookingMid.appendChild(bookingAttractionInfo1)
+                bookingAttractionInfo1.appendChild(bookingTitle)
+
+                for(let i=0;i<data["data"].length;i++){
+                    let bookingMid1=window.document.getElementById("bookingMid")
+                    
+                    let bookingAttractionInfo=window.document.createElement("div")
+                    bookingAttractionInfo.setAttribute("class","bookingAttractionInfo")
+
+                    let bookingAttractionInfoDetail=window.document.createElement("div")
+                    bookingAttractionInfoDetail.setAttribute("class","bookingAttractionInfoDetail")
+                    let bookingImage=window.document.createElement("div")
+                    bookingImage.setAttribute("class","bookingImage")
+                    bookingImage.style.backgroundImage="url("+data["data"][i]["attraction"]["image"]+")"
+                    let bookingAttractionInfoDetailText=window.document.createElement("bookingAttractionInfoDetailText")
+                    bookingAttractionInfoDetailText.setAttribute("class","bookingAttractionInfoDetailText")
+
+                    let attractionName=window.document.createElement("div")
+                    let attractionNameText="台北一日遊 : "+data["data"][i]["attraction"]["name"]
+                    attractionName.innerHTML=attractionNameText
+
+                    let attractionDate=window.document.createElement("div")
+                    let attractionDateText="日期 : "+ data["data"][i]["date"]
+                    attractionDate.innerHTML=attractionDateText
+
+                    let attractionTime=window.document.createElement("div")
+                    let attractionTimeText="時間 : "+data["data"][i]["time"]
+                    attractionTime.innerHTML=attractionTimeText
+                    
+                    let attractionPrice=window.document.createElement("div")
+                    let attractionPriceText="費用 : "+String(data["data"][i]["price"]) 
+                    attractionPrice.innerHTML=attractionPriceText
+                    allPrice=allPrice+data["data"][i]["price"]
+
+                    let attractionAddress=window.document.createElement("div")
+                    let attractionAddressText="地點 : "+data["data"][i]["attraction"]["address"]
+                    attractionAddress.innerHTML=attractionAddressText
+
+                    let bookingDeleteIcon=window.document.createElement("div")
+                    bookingDeleteIcon.setAttribute("class","bookingDeleteIcon")
+                    let deleteIcon=window.document.createElement("div")
+                    deleteIcon.setAttribute("class","deleteIcon")
+                    deleteIcon.setAttribute("value",data["data"][i]["order_id"])
+                    deleteIcon.addEventListener("click",function(){
+                        console.log(data["data"][i]["order_id"])
+                        deleteBookingOrder(data["data"][i]["order_id"])
+
+                    })
+                    bookingMid1.appendChild(bookingAttractionInfo)
+                    bookingAttractionInfo.appendChild(bookingAttractionInfoDetail)
+                    bookingAttractionInfoDetail.appendChild(bookingImage)
+                    bookingAttractionInfoDetail.appendChild(bookingAttractionInfoDetailText)
+                    bookingAttractionInfoDetail.appendChild(bookingDeleteIcon)
+                    bookingAttractionInfoDetailText.appendChild(attractionName)
+                    bookingAttractionInfoDetailText.appendChild(attractionDate)
+                    bookingAttractionInfoDetailText.appendChild(attractionTime)
+                    bookingAttractionInfoDetailText.appendChild(attractionPrice)
+                    bookingAttractionInfoDetailText.appendChild(attractionAddress)
+                    bookingDeleteIcon.appendChild(deleteIcon)
+                    console.log(deleteIcon.getAttribute("value"))
+
+                    let bookingMid=window.document.getElementById("bookingMid")
+                    let hr=window.document.createElement("hr")
+                    hr.setAttribute("class","hrColor")
+                    bookingMid.appendChild(hr)
+                }
+                let allPriceText=window.document.getElementById("allPriceText")
+                allPriceText.textContent="新台幣 "+String(allPrice)+"元"
+                if(data==null){
+                    // 導航到頁面顯尚未擁有預定行程
+                    
+                }
+            })
+        } 
+        //送出取消預定行程，並刷新葉面
+        function deleteBookingOrder(order_id){
+            let fd=new FormData()
+            fd.append("order_id",order_id)
+            fetch("/api/booking",{
+                method:"delete",
+                body:fd
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                console.log("刪除成功")
+                location=location
+            })
+        }
+        // 打開登入帳號介面
+        function showloginBackground(){
+            backgroundFilter=window.document.getElementById("backgroundFilter")
+            backgroundFilter.style.display='flex'
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='flex'
+        }
+        // 發送登入帳號請求
+        function sendFormDataToLogin(){
+            event.preventDefault()
+            let fd = new FormData()
+            fd.append("email",document.getElementById("inputEmail").value)
+            fd.append("password",document.getElementById("inputPassword").value)
+            fetch("/api/user/auth",{
+                method:'put',
+                body:fd,
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                if("error" in data){
+                    message=document.getElementById("message")
+                    message.innerHTML=data["message"]
+                }
+                if("ok" in data){
+                    message=document.getElementById("message")
+                    message.innerHTML="登入成功"
+                    location=location
+                }
+            })
+        }
+        // 發送創建帳號請求
+        function sendFormDataToRegisterAccount(){
+            event.preventDefault()
+            let fd=new FormData()
+            fd.append("name",document.getElementById("inputNameRegister").value)
+            fd.append("email",document.getElementById("inputEmailRegister").value)
+            fd.append("password",document.getElementById("inputPasswordRegister").value)
+            fetch("/api/user",{
+                method:'post',
+                body:fd,
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log("error" in data)
+
+                if("error" in data){
+                    message=document.getElementById("messageRegister")
+                    message.innerHTML=data["message"]
+                }
+                if("ok" in data){
+                    message=document.getElementById("messageRegister")
+                    message.innerHTML="新帳號註冊成功"
+                }
+            })
+
+        }
+        // 發送登出請求
+        function signOutAccount(){
+            fetch("/api/user/auth",{
+                method:"delete"
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                if("ok" in data){
+                    login=window.document.getElementById("login")
+                    signOut=window.document.getElementById("signOut")
+                    login.style.display="inline-block"
+                    signOut.style.display="none"
+                    message=document.getElementById("message")
+                    message.innerHTML=""
+                }
+                
+            })
+        }
+        // 關閉登入、創建帳號介面
+        function closeLoginWindow(){
+            backgroundFilter=window.document.getElementById("backgroundFilter")
+            backgroundFilter.style.display='none'
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='none'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='none'
+        }
+        // 切換重創建帳號介面
+        function registerAccount(){
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='none'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='flex'
+        }
+        // 切換回登入介面
+        function returnToLoginPage(){
+            loginLayout=window.document.getElementById("loginLayout")
+            loginLayout.style.display='flex'
+            loginLayout=window.document.getElementById("registerLayout")
+            loginLayout.style.display='none'
+        }
+        // 加入mousedown效果，增加按鈕的感覺
+        function mousedown(i){
+            i.style.opacity="0.8"
+        }
+        // 按完後回復原狀
+        function mouseup(i){
+            i.style.opacity="1"
+        }
+        // 回首頁
+        function toIndexPage(){
+            location.href="/"
+        }
+        //切換到booking葉面，如果沒有登入會先跳出登入視窗
+        function directToBooking(){
+            if(userName==""){
+                showloginBackground()
+            }else{
+                location.href="/booking"
             }
-        </script>
-    </body>
+        }
+    </script>
+</head>
+<body style="color: #666666;" onload="init()">
+    <div id="backgroundFilter" class="backgroundFilter"></div>
+    <div id="loginLayout" class="loginLayout">
+        <div id="loginBox" class="loginBox" >
+            <div class="loginForm" id="loginForm">
+                <div class="loginTitle">
+                    會員登入帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputEmail" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPassword" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToLogin()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="registerAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">還沒有帳戶 ?<u> 點此註冊</u></div>
+                <div id="message" class="message"></div>
+
+            </div>
+        </div>
+    </div>
+    <div id="registerLayout" class="registerLayout">
+        <div id="registerBox" class="registerBox" >
+            <div class="registerForm" id="registerForm">
+                <div class="loginTitle">
+                    註冊會員帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"  onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputNameRegister" class="inputEmailAndPassword" type="text" name="name" placeholder="  輸入姓名">
+                    <input id="inputEmailRegister" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToRegisterAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="returnToLoginPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><u>已有帳號，回到登入頁面</u></div>
+                <div id="messageRegister" class="message"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="outsideTop"></div>
+        <div class="insideTop">
+            <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)">台北一日遊</div>
+            <div class="topRight">
+                <div class="scheduld" onclick="directToBooking()">預定行程</div>
+                <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
+                <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
+            </div>
+        </div>
+        <div class="outsideTop"></div>
+    </div>
+    <div class="wrapper">
+<!-- -------------分隔線中間為此頁面特別內容，其他為固定板型---------------- -->
+        <div id="bookingBox" class="bookingBox">
+            <div class="bookingContentBox">
+                <div class="bookingLeft"></div>
+                <div id="bookingMid" class="bookingMid">
+                    <!-- <div id="bookingAttractionInfo" class="bookingAttractionInfo">
+                        <div id="bookingTitle" class="bookingTitle"></div>
+
+
+                        <div id="bookingAttractionInfoDetail" class="bookingAttractionInfoDetail">
+                            <div id="bookingImage" class="bookingImage"></div>
+                            <div class="bookingAttractionInfoDetailText">
+                                <div>台北一日遊 : <span id="attractionName"></span></div>
+                                <div>日期 : <span id="attractionOrderDate"></span></div>
+                                <div>時間 : <span id="attractionOrderTime"></span></div>
+                                <div>費用 : <span id="attractionOrderPrice"></span></div>
+                                <div>地點 : <span id="attractionOrderAddress"></span></div>
+                            </div>
+                            <div class="bookingDeleteIcon" valus="景點id"><div class="deleteIcon"></div></div>
+                        </div>
+
+
+                    </div> -->
+                </div>
+                <div class="bookingRight"></div>
+            </div>
+            <div class="bookingMemberInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingMemberInfoMid">
+                    <div class="bookingMemberInfoTitle">您的聯絡資訊</div>
+                    <form style="margin-left: 10%;margin-right: 10%;">
+                        聯絡姓名 : <input type="text" width="100px"><br>
+                        聯絡姓名 : <input type="text" width="100px"><br>
+                        聯絡姓名 : <input type="text" width="100px"><br>
+                        <a>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</a>
+                    </form>
+                    <hr class="hrColor">
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+            <div class="bookingMemberInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingMemberInfoMid">
+                    <div class="bookingCreditInfo">信用卡付款資訊</div>
+                    <form style="margin-left: 10%;margin-right: 10%;">
+                        卡片號碼 : <input type="password" width="100px" placeholder="**** **** **** ****"><br>
+                        過期時間 : <input type="text" width="100px" placeholder="MM/YY"><br>
+                        聯絡姓名 : <input type="text" width="100px" placeholder="CVV"><br>
+                    </form>
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+            <hr class="hrColor">
+            <div class="bookingEndInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingEndMid">
+                    <div></div>
+                    <div class="bookingEndMidInfo">
+                        <div>總金額 : <a id="allPriceText"></a></div>
+                        <div><input type="submit" value="確認訂購並付款" class="bookingSubmitButton"></div>
+                    </div>
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+
+
+
+        </div>
+        
+
+
+<!-- ----------------------------- -->
+
+    </div>
+    <div class="footer" id="footer">
+        <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+</body>
 </html>

@@ -543,15 +543,15 @@ body{
   }
 /* -------------------------------- */
 .formSubmitButton{
-
     width: 154px;
     height: 36px;
     margin-left: 20px;
     margin-bottom: 20px;
-    color: white;
-    background-color: #448899;
+    color: rgb(20, 19, 19);
     border-style: none;
     border-radius: 5px;
+    background-color:#448899;
+    color: white;
 }
 .allText{
     margin: 30px;
@@ -564,8 +564,148 @@ body{
     margin: 10px;
 }
 .transportation{
-    margin: 10px;;
+    margin: 10px;
 }
+
+.bookingContentBox{
+    margin-top: 50px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+}
+.bookingLeft{
+    width: 100%;
+}
+.bookingMid{
+    width: 100%;
+    height: max-content;
+}
+.bookingRight{
+    width: 100%;
+}
+.bookingAttractionInfoTitle{
+    margin-left: 10%;
+    margin-right:10%;
+    margin-bottom: 10px;
+
+}
+.bookingAttractionInfo{
+    margin-left: 10%;
+    margin-right:10%;
+}
+.bookingAttractionInfoDetail{
+    /* margin-bottom: 30px; */
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 10fr 50fr 1fr;
+}
+.bookingImage{
+    width:266px ;
+    height: 200px;
+    margin-left: 5px ;
+}
+.bookingAttractionInfoDetailText{
+    margin-top: 10px;
+    margin-left: 10px;
+    height: fit-content;
+    line-height: 2;
+}
+.bookingDeleteIcon{
+    display: flex;
+    justify-content: right;
+}
+.deleteIcon{
+    /* position:absolute; */
+    display: inline-block;
+    right: 10%;
+    color:white;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url(/static/icon_delete.png);
+    background-repeat: no-repeat;
+    
+}
+.bookingTitle{
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: x-large;
+}
+.bookingImage{
+    background-size: cover;
+    font-size: larger;
+    color: #666666;
+}
+.bookingMemberInfo{
+    line-height: 2;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+}
+.bookingMemberInfoLeft{
+        width: 100%;
+}
+.bookingMemberInfoMid{
+    width: 100%;
+}
+.bookingMemberInfoTitle{
+    width: 400px;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: larger;
+    font-weight: bold;
+    
+}
+.bookingMemberInfoRight{
+    width: 100%;
+}
+.bookingCreditInfo{
+    width: 400px;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: larger;
+    font-weight: bold;
+}
+.bookingBox{
+    width: 100%;
+}
+.bookingEndInfo{
+    margin-top: 20px;
+    line-height: 2;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr minmax(1200px,1fr) 1fr;
+    padding-bottom: 130px;
+}
+.bookingEndMid{
+    display: grid;
+    grid-template-columns:15fr 1fr;
+}
+.bookingEndMidInfo{
+    width: 200px;
+}
+.bookingSubmitButton{
+    width: 173px;
+    height: 36px;
+    border-radius: 5px;
+    border-style: none;
+    color:white;
+    background-color: #448899;
+}
+.hrColor{
+    border: 0;
+    background-color: #E8E8E8;
+    height: 1px;
+    width: 100%;
+    /* opacity: 0.7; */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+
 @media (max-width:1200px) {
     .box{
         grid-template-columns: 1fr;
@@ -693,6 +833,22 @@ body{
         display: block;
         border: 1px solid #448899;
         background: #448899;
+    }
+    .bookingContentBox{
+        grid-template-columns: 1fr;
+    }
+    .bookingMemberInfo{
+        grid-template-columns: 1fr;
+    }
+    .bookingEndInfo{
+        grid-template-columns: 1fr;
+    }
+    .bookingAttractionInfoDetail{
+        grid-template-columns: 1fr;
+    }
+    .bookingImage{
+        margin-left: 0px;
+        width:100% ;
     }
 
 }

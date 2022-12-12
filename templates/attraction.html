@@ -10,6 +10,7 @@
         let photosCount=0
         let displayPhotoIndex=0
         let allPhotoUrlList=[]
+        let userName=""
         async function init(){
             getMemberInfo()
             await buildCatList()
@@ -122,6 +123,9 @@
                 signOut=window.document.getElementById("signOut")
                 login.style.display="none"
                 signOut.style.display="inline-block"
+                userName=data["data"]["name"]
+                console.log(userName)
+                
                 }
             })
         }
@@ -153,15 +157,7 @@
                 if("ok" in data){
                     message=document.getElementById("message")
                     message.innerHTML="登入成功"
-                    login=window.document.getElementById("login")
-                    signOut=window.document.getElementById("signOut")
-                    login.style.display="none"
-                    signOut.style.display="inline-block"
-                    backgroundFilter=window.document.getElementById("backgroundFilter")
-                    backgroundFilter.style.display='none'
-                    loginLayout=window.document.getElementById("loginLayout")
-                    loginLayout.style.display='none'
-
+                    location=location
                 }
             })
         }
@@ -200,14 +196,8 @@
             .then((data)=>{
                 console.log(data)
                 if("ok" in data){
-                    login=window.document.getElementById("login")
-                    signOut=window.document.getElementById("signOut")
-                    login.style.display="inline-block"
-                    signOut.style.display="none"
-                    message=document.getElementById("message")
-                    message.innerHTML=""
+                    location=location
                 }
-                
             })
         }
         // 關閉登入、創建帳號介面
@@ -241,10 +231,62 @@
         function mouseup(i){
             i.style.opacity="1"
         }
+        // 送出訂單請求
+        function sendOrderRequest(){
+            //停止預設的submit
+            event.preventDefault()
+            let url = location.href.split("/")
+            let attractionId = url[url.length-1]            
+            console.log(document.getElementById("dateInput").value)
+            console.log(document.getElementById("ritema").checked)
+            console.log(document.getElementById("ritemb").value)
+            console.log(document.getElementById("showPrice").textContent)
+            console.log(attractionId)
+            let time=""
+            let price=0
+            if(document.getElementById("ritema").checked){
+                time="morning"
+                price=2000
+            }
+            if(document.getElementById("ritemb").checked){
+                time="afternoon"
+                price=2500
+            }
+            if(time==""){
+                event.preventDefault()
+            }
+            formData=new FormData()
+            formData.append("date",document.getElementById("dateInput").value)
+            formData.append("time",time)
+            formData.append("price",price)
+            formData.append("attractionId",attractionId)
+            fetch("/api/booking",{
+                method:"post",
+                body:formData
+            })
+            .then((res)=>res.json())
+            .then((data)=>{
+                console.log(data)
+                if(data["message"]=="請先登入帳號"){
+                    showloginBackground()
+                }
+                if("ok" in data)
+                    location.href="/booking"
+            })
+        }
+        function directToBooking(){
+            if(userName==""){
+                showloginBackground()
+            }else{
+                location.href="/booking"
+            }
+        }
+
         // 回首頁
         function toIndexPage(){
             location.href="/"
         }
+
     </script>
 </head>
 <body style="color: #666666;" onload="init()">
@@ -295,7 +337,7 @@
         <div class="insideTop">
             <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)">台北一日遊</div>
             <div class="topRight">
-                <div class="scheduld">預定行程</div>
+                <div class="scheduld" onclick="directToBooking()">預定行程</div>
                 <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
                 <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
             </div>
@@ -330,7 +372,7 @@
                         <form id="myform" class="myform">
                             <div>訂購導覽行程</div>
                             <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
-                            <div>選擇日期：<input type="date"></div>
+                            <div>選擇日期：<input type="date" id="dateInput"></div>
                             <div class="selectTime">選擇時間：
                                 <span class="radio-item">
                                     <input type="radio" id="ritema" name="ritem" value="2000" onclick="changePrice(value)">
@@ -342,7 +384,7 @@
                                 </span>
                             </div>
                             <div>導覽費用：<span id="showPrice"></span></div>
-                            <input onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" type="button" value="開始預約行程" class="formSubmitButton" >
+                            <input onclick="sendOrderRequest()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" type="button" value="開始預約行程" class="formSubmitButton" >
                         </form>
                     </div>
                 </div>
