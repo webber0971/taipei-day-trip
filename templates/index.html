@@ -228,6 +228,7 @@
                 login.style.display="none"
                 signOut.style.display="inline-block"
                 userName=data["data"]["name"]
+
                 }
             })
         }
@@ -359,6 +360,7 @@
                 location.href="/booking"
             }
         }
+
         //測試用
         function print(){
             console.log("test")
@@ -418,6 +420,7 @@
             <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">台北一日遊</div>
             <div class="topRight">
                 <div class="scheduld" onclick="directToBooking()">預定行程</div>
+
                 <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
                 <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
             </div>
