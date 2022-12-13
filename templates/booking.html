@@ -90,6 +90,7 @@
 
                         let attractionName=window.document.createElement("div")
                         let attractionNameText="台北一日遊 : "+data["data"][i]["attraction"]["name"]
+                        attractionName.setAttribute("class","bookingAttractionName")
                         attractionName.innerHTML=attractionNameText
 
                         let attractionDate=window.document.createElement("div")
@@ -370,8 +371,8 @@
                     <div class="bookingMemberInfoTitle">您的聯絡資訊</div>
                     <form style="margin-left: 10%;margin-right: 10%;">
                         聯絡姓名 : <input type="text" width="100px"><br>
-                        聯絡姓名 : <input type="text" width="100px"><br>
-                        聯絡姓名 : <input type="text" width="100px"><br>
+                        聯絡信箱 : <input type="text" width="100px"><br>
+                        手機號碼 : <input type="text" width="100px"><br>
                         <a>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</a>
                     </form>
                     <hr class="hrColor">

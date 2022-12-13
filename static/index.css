@@ -488,11 +488,15 @@ body{
 
 .booking{
     width: 95%;
-    margin: 3%;
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 .myform{
     padding-top: 10px;
-    margin: 20px;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
     background-color: #E8E8E8;
     border-radius: 5px;
 }
@@ -588,6 +592,12 @@ body{
     margin-right:10%;
     margin-bottom: 10px;
 
+}
+.bookingAttractionName{
+    color: #337788;
+    font-size: larger;
+    font-weight: bolder;
+    padding-bottom: 8px;
 }
 .bookingAttractionInfo{
     margin-left: 10%;
