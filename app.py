@@ -94,18 +94,18 @@ def signNewMember():
 @app.get("/api/user/auth")
 def getSigninMemberData():
 	try:
-		token=request.cookies["token"]
+		tokenUser=request.cookies["tokenUser"]
 	except:
-		print("沒有cookie，名為token")
+		print("沒有cookie，名為tokenUser")
 		return "null",200
 	# 驗證token是否有被竄改
 	try:
 		# 將token解密，取出存放在payload內的資訊
-		eee=decode_token(token)
+		eee=decode_token(tokenUser)
 		info={"data":eee["data"]}
 		return info,200
 	except:
-		return "token 驗證失敗",422
+		return "tokenUser 驗證失敗",422
 
 # 登入會員帳戶
 @app.put("/api/user/auth")
@@ -134,12 +134,12 @@ def login():
 			resp=jsonify({"ok": True})
 			print(resp)
 			# 將clientInfo作為附加資訊存入以jwt嘉蜜的token內
-			access_token = create_access_token(identity=getDataFromMemberTable[1],additional_claims=clientInfo)
+			access_tokenUser = create_access_token(identity=getDataFromMemberTable[1],additional_claims=clientInfo)
 			# token=access_token
 			# refresh_token= create_refresh_token(identity=email)
 			# set_access_cookies(resp,access_token,max_age=604800)
 			# set_refresh_cookies(resp,refresh_token)
-			resp.set_cookie(key="token",value=access_token,max_age=604800)
+			resp.set_cookie(key="tokenUser",value=access_tokenUser,max_age=604800)
 			return resp,200
 		else:
 			errorInfo={"error": True,"message": "password is wrong , please try again"}
@@ -154,7 +154,7 @@ def login():
 def logout():
 	# 將cookie中的jwt移除
 	resp=jsonify({'ok':True})
-	resp.delete_cookie(key="token")
+	resp.delete_cookie(key="tokenUser")
 	resp.delete_cookie(key="access_token_cookie")
 	resp.delete_cookie(key="refresh_token_cookie")
 
@@ -283,10 +283,10 @@ def getCategoriesList():
 # 取得預定行程
 @app.get("/api/booking")
 def getUnconfirmedItinerary():
-	if(request.cookies.__contains__("token")):
+	if(request.cookies.__contains__("tokenUser")):
 		try:
-			token=request.cookies["token"]
-			dataInCookie=decode_token(token)
+			tokenUser=request.cookies["tokenUser"]
+			dataInCookie=decode_token(tokenUser)
 			id=dataInCookie["data"]["id"]
 			connector=mydbPool.get_connection()
 			mycursor=connector.cursor()
@@ -340,13 +340,13 @@ def getUnconfirmedItinerary():
 @app.post("/api/booking")
 def buildNewItinerary():
 	try:
-		if(not request.cookies.__contains__("token")):
-			print("沒有cookie，名為token")
+		if(not request.cookies.__contains__("tokenUser")):
+			print("沒有cookie，名為tokenUser")
 			errorInfo={"error":True,"message":"請先登入帳號"}
 			return errorInfo,403
-		# 將token解密，取出存放在payload內的資訊
-		token=request.cookies["token"]
-		dataInCookie=decode_token(token)
+		# 將tokenUser解密，取出存放在payload內的資訊
+		tokenUser=request.cookies["tokenUser"]
+		dataInCookie=decode_token(tokenUser)
 		name=dataInCookie["data"]["name"]
 		id=dataInCookie["data"]["id"]
 		email=dataInCookie["data"]["email"]
@@ -384,12 +384,12 @@ def buildNewItinerary():
 @app.delete("/api/booking")
 def deleteThisItinerary():
 	try:
-		if(not request.cookies.__contains__("token")):
-			print("沒有cookie，名為token")
+		if(not request.cookies.__contains__("tokenUser")):
+			print("沒有cookie，名為tokenUser")
 			errorInfo={"error":True,"message":"請先登入帳號"}
 			return errorInfo,403
-		token=request.cookies["token"]
-		dataInCookie=decode_token(token)
+		tokenUser=request.cookies["tokenUser"]
+		dataInCookie=decode_token(tokenUser)
 		memberId=dataInCookie["data"]["id"]
 		orderId=request.form["order_id"]
 		connector=mydbPool.get_connection()
