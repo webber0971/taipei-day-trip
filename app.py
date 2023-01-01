@@ -8,6 +8,7 @@ app.config["TEMPLATES_AUTO_RELOAD"]=True
 from mysql.connector import pooling
 import json
 import datetime
+import requests
 
 #載入&實例化jwt
 
@@ -65,7 +66,6 @@ def signNewMember():
 		mycursor.execute(sql,(email,))
 		getUserInfoFromTable=mycursor.fetchone()
 		if(getUserInfoFromTable != None):
-    
 			responseJs={"error": True,"message": "email is used"}
 			connector.commit()
 			mycursor.close()
@@ -103,6 +103,8 @@ def getSigninMemberData():
 		# 將token解密，取出存放在payload內的資訊
 		eee=decode_token(tokenUser)
 		info={"data":eee["data"]}
+		print(tokenUser)
+		print(eee)
 		return info,200
 	except:
 		return "tokenUser 驗證失敗",422
@@ -139,14 +141,14 @@ def login():
 			# refresh_token= create_refresh_token(identity=email)
 			# set_access_cookies(resp,access_token,max_age=604800)
 			# set_refresh_cookies(resp,refresh_token)
-			resp.set_cookie(key="tokenUser",value=access_tokenUser,max_age=604800)
+			resp.set_cookie(key="tokenUser",value=access_tokenUser,max_age=3600)
 			return resp,200
 		else:
 			errorInfo={"error": True,"message": "password is wrong , please try again"}
 			return errorInfo,400
 	except:
 		errorInfo={ "error":True,"message":"Internal Server Error"}
-		return errorInfo,500
+		return errorInfo,501
 
 
 #登出帳戶
@@ -292,7 +294,7 @@ def getUnconfirmedItinerary():
 			mycursor=connector.cursor()
 			mycursor.execute("use taipeiAttractions")
 			print("11")
-			sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where member_id = %s"
+			sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where member_id = %s and paid is null"
 			val=id
 			print("22")
 			mycursor.execute(sql,(val,))
@@ -376,7 +378,10 @@ def buildNewItinerary():
 			errorInfo={"error":True,"nessage":"寫入db時發生錯誤"}
 			return errorInfo,400
 	except:
-		errorInfo={"error":True,"message":"伺服器錯誤"}
+		# resp=jsonify({'ok':True})
+		# resp.delete_cookie(key="tokenUser")
+		errorInfo=jsonify({"error":True,"message":"伺服器錯誤"})
+		errorInfo.delete_cookie(key="tokenUser")
 		return errorInfo,500
 
 
@@ -405,6 +410,193 @@ def deleteThisItinerary():
 
 	except:
 		return "伺服器發生錯誤",400
+
+# 建立新的訂單，並完成付款程序
+import json
+import requests
+@app.post("/api/orders")
+def orderToTappay():
+	try:
+		if(not request.cookies.__contains__("tokenUser")):
+			print("沒有cookie，名為tokenUser")
+			errorInfo={"error":True,"message":"請先登入帳號"}
+			return errorInfo,403
+		tokenUser=request.cookies["tokenUser"]
+		try:
+			dataInCookie=decode_token(tokenUser)
+		except:
+			errorInfo=jsonify({"error":True,"message":"tokenUser過期，請重新登入"})
+			errorInfo.delete_cookie(key="tokenUser")
+			return errorInfo,404
+
+		memberId=dataInCookie["data"]["id"]
+		prime=request.json["prime"]
+		orderIdList=request.json["order"]["trip"]
+		userName=request.json["order"]["contact"]["name"]
+		userEmail=request.json["order"]["contact"]["email"]
+		userPhoneNumber=request.json["order"]["contact"]["phone"]
+		amount=0
+		connector=mydbPool.get_connection()
+		mycursor=connector.cursor()
+		mycursor.execute("use taipeiAttractions")
+		print("11")
+		sql="select * from orderList where member_id = %s"
+		val=memberId
+		print("22")
+		mycursor.execute(sql,(val,))
+		userAllOrderList=mycursor.fetchall()
+		print("33")
+		connector.commit()
+		mycursor.close()
+		connector.close()
+		orderIdListStr=""
+		for i in userAllOrderList:
+			if i[0] in orderIdList :
+				orderIdListStr=orderIdListStr+str(i[0])+","
+				amount=amount+i[5]
+				print(amount)
+
+		url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+		headers={
+			'Content-Type': 'application/json',
+			'x-api-key': 'partner_GhEedd0oFO42dBxPBp7qWJzRM6Qb6V4h5WPnKkDw0PbYRlTofSamRqEq'
+		}
+		post_data = {
+			"prime":prime,
+			"partner_key": "partner_GhEedd0oFO42dBxPBp7qWJzRM6Qb6V4h5WPnKkDw0PbYRlTofSamRqEq",
+			"merchant_id": "webber0971_ESUN",
+			"amount": amount,
+			"currency": "TWD",
+			"details": orderIdListStr,
+			"cardholder": {
+				"phone_number": userPhoneNumber,
+				"name": userName,
+				"email": userEmail
+			},
+			"remember": False
+		}
+		post_data=json.dumps(post_data)
+		r=requests.post(url,headers=headers,data=post_data).json()
+		res=""
+		if(r["msg"] == "Success") :
+			# 更改orderList的paid狀態
+			try:
+				connector=mydbPool.get_connection()
+				mycursor=connector.cursor()
+				mycursor.execute("use taipeiAttractions")
+				print("11")
+				orderNumberList=" ".join([str(elem) for elem in orderIdList])
+				print(orderNumberList)
+				# for i in orderNumberList:
+				# 	print(i)
+				sql="update orderList set paid = %s where order_id = %s"
+				print("iii")
+				if(r["order_number"]==""):
+					r["order_number"]=123456789				
+				for i in orderIdList :
+					print("ppp")
+					val= (r["order_number"],i)
+					mycursor.execute(sql,val)
+					connector.commit()
+				# 儲存tappay訂單資訊
+				print("kkk")
+				print(r["order_number"])
+				sql="insert into tappay_list(tappay_number,member_id,order_number_list,status,name,email,phone) values (%s,%s,%s,%s,%s,%s,%s)"
+				val=(r["order_number"],memberId,orderNumberList,r["status"],userName,userEmail,userPhoneNumber)			
+				mycursor.execute(sql,val)
+				connector.commit()
+				mycursor.close()
+				connector.close()
+				res={
+					"data":{
+						"number":r["order_number"],
+						"payment":{
+							"status":r["status"],
+							"message":r["msg"]
+						}
+					}
+				}
+				print("訂單編號"+str(r["order_number"])+"已成功存入tappay_list table")
+				return res,200
+			except:	
+				mycursor.close()
+				connector.close()
+				return {"error":True,"message":"伺服器db發生錯誤"},506
+		if(r["msg"] != "Success") :
+			try:
+				res={
+					"data":{
+						"payment":{
+							"status":r["status"],
+							"message":r["msg"]
+						}
+					}
+				}
+				return {"error":True,"data":res,"message":r["msg"]},401
+			except:
+				mycursor.close()
+				connector.close()
+				res={"error":True,"message":r["msg"]}
+				return res,400
+	except:
+		return "伺服器發生錯誤",500
+
+# 根據訂單編號取得訂單訊息，null表示沒有資料
+@app.get("/api/orders/<int:orderNumber>")
+def getOrderNumberInfo(orderNumber):
+	sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where paid = %s"
+	val=(orderNumber,)
+	connector=mydbPool.get_connection()
+	mycursor=connector.cursor()
+	mycursor.execute("use taipeiAttractions")
+	mycursor.execute(sql,val)
+	dataInfo=mycursor.fetchall()
+
+	sql="select * from tappay_list where tappay_number = %s"
+	mycursor.execute(sql,val)
+	userInfo=mycursor.fetchone()
+	connector.commit()
+	mycursor.close()
+	connector.close()
+	# print(dataInfo)
+	print(userInfo)
+	print(len(dataInfo))
+	count=0
+	tripList=[]
+	price=0
+	# res.append
+	for i in dataInfo:
+		attractionName="attraction"+str(count)
+		imageUrl=i[20].split("https")
+		print("---------")
+		imageUrl1="https"+imageUrl[1]
+		cell={
+			attractionName:{
+				"id":i[0],
+				"name":i[10],
+				"address":i[25],
+				"image":imageUrl1,
+				"date":i[3].isoformat(),
+				"time":i[4]
+			}
+		}
+		count=count+1
+		tripList.append(cell)
+		price=price+i[5]
+		print(cell)
+	res={
+		"number":orderNumber,
+		"price":price,
+		"trip":tripList,
+		"contact":{
+			"name":userInfo[1],
+			"email":userInfo[6],
+			"phone":userInfo[7]
+		},
+		"status":userInfo[4]
+	}
+
+	return {"data":res},600
 
 
 app.run(host="0.0.0.0",port=8888)

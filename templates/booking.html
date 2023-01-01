@@ -6,17 +6,416 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/index.css">
     <title>attractiona</title>
+    
+</head>
+<body style="color: #666666;" onload="init()">
+    <div id="loading-wrapper1" class="loading-wrapper thankPageInit">
+        <div style="color: #64d6e2" class="loading la-line-scale la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div id="loading-wrapper" class="loading-wrapper">
+        <div style="color: #64d6e2" class="loading la-line-scale la-2x">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+<!-- <body style="color: #666666;"></body> -->
+    <div id="backgroundFilter" class="backgroundFilter"></div>
+    <div id="loginLayout" class="loginLayout">
+
+        <div id="loginBox" class="loginBox" >
+            <div class="loginForm" id="loginForm">
+                <div class="loginTitle">
+                    會員登入帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputEmail" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPassword" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToLogin()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="registerAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">還沒有帳戶 ?<u> 點此註冊</u></div>
+                <div id="message" class="message"></div>
+
+            </div>
+        </div>
+    </div>
+    <div id="registerLayout" class="registerLayout">
+        <div id="registerBox" class="registerBox" >
+            <div class="registerForm" id="registerForm">
+                <div class="loginTitle">
+                    註冊會員帳號
+                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"  onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
+                </div>
+                <form id="loginInfoForm" class="loginInfoForm">
+                    <input id="inputNameRegister" class="inputEmailAndPassword" type="text" name="name" placeholder="  輸入姓名">
+                    <input id="inputEmailRegister" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
+                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
+                    <div>
+                        <input onclick="sendFormDataToRegisterAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
+                    </div>
+                </form>
+                <div class="loginEndText" onclick="returnToLoginPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><u>已有帳號，回到登入頁面</u></div>
+                <div id="messageRegister" class="message"></div>
+
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="outsideTop"></div>
+        <div class="insideTop">
+            <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)">台北一日遊</div>
+            <div class="topRight">
+                <div class="scheduld" onclick="directToBooking()">預定行程</div>
+                <div id="login" class="login " onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
+                <div id="signOut" class="signOut " onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
+            </div>
+        </div>
+        <div class="outsideTop"></div>
+    </div>
+    <div class="wrapper">
+<!-- -------------分隔線中間為此頁面特別內容，其他為固定板型---------------- -->
+        <div id="bookingBox" class="bookingBox">
+            <div class="bookingContentBox">
+                <div class="bookingLeft"></div>
+                <div id="bookingMid" class="bookingMid">
+                </div>
+                <div class="bookingRight"></div>
+            </div>
+            <div id="bookingMemberInfo" class="bookingMemberInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingMemberInfoMid">
+                    <div class="bookingMemberInfoTitle">您的聯絡資訊</div>
+                    <form style="margin-left: 10%;margin-right: 10%;">
+                        聯絡姓名 : <input id="userName" class="bookingUserInfoInput" type="text" width="100px" autocomplete="off"><br>
+                        聯絡信箱 : <input id="userEmail" class="bookingUserInfoInput" type="text" width="100px" autocomplete="off"><br>
+                        手機號碼 : <input id="userPhoneNumber" class="bookingUserInfoInput" type="text" width="100px" autocomplete="off"><br>
+                        <a>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</a>
+                    </form>
+                    <hr class="hrColor">
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+            <div id="bookingCreditInfo" class="bookingMemberInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingMemberInfoMid">
+                    <div class="bookingCreditInfo">信用卡付款資訊</div>
+                    <form style="margin-left: 10%;margin-right: 10%;">
+                        <div style="display:flex; align-items: center;">
+                            <div style="display: inline-block; ">卡片號碼 : </div>
+                            <div id="card-number" style="display: inline-block; padding: 5px;height: 20px; border-style: solid; border-radius: 5px;border-width: 1px;margin: 2px;width: 200px;"></div>
+                        </div>
+                        <div style="display:flex; align-items: center;">
+                            過期時間 : <div id="tappay-expiration-date"  style="display: inline-block; padding: 5px;height: 20px; border-style: solid;border-radius: 5px;border-width: 1px;margin: 2px;width: 200px;" type="text" width="100px"></div>
+                        </div>
+                        <div style="display:flex; align-items: center;">
+                            卡片後三碼 : <div id="tappay-cvv"  style="display: inline-block; padding: 5px;height: 20px; border-style: solid;border-radius: 5px;border-width: 1px;margin: 2px;width: 200px;" type="text" width="100px" ></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+            <hr id="hr1" class="hrColor">
+            <div id="bookingEndInfo" class="bookingEndInfo">
+                <div class="bookingMemberInfoLeft"></div>
+                <div class="bookingEndMid">
+                    <div></div>
+                    <div class="bookingEndMidInfo">
+                        <div>總金額 : <a id="allPriceText"></a></div>
+                        <div>
+                            <form>
+                                <input id="submitPayment" type="submit" value="確認訂購並付款" class="bookingSubmitButton"></div>
+                            </form>
+                    </div>
+                </div>
+                <div class="bookingMemberInfoRight"></div>
+            </div>
+        </div>
+        
+<!-- ----------------------------- -->
+
+    </div>
+    <div class="footer" id="footer">
+        <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
     <script>
         let photosCount=0
         let displayPhotoIndex=0
         let allPhotoUrlList=[]
         let userName=""
         let allPrice=0
-        //登入頁面初始狀態取得
+        let orderIdList=[]
+        TPDirect.setupSDK(126995, 'app_cijd3ehqZJy7gMOxU66OlobyZJqakm7GmyHZxmbKbaoz4ldketgWEliXFDVG', 'sandbox')
+        TPDirect.card.setup({
+            fields: {
+                number: {
+                    element: window.document.getElementById("card-number"),
+                    placeholder: '**** **** **** ****',
+                },
+                expirationDate: {
+                    element: document.getElementById("tappay-expiration-date"),
+                    placeholder: 'MM / YY'
+                },
+                ccv: {
+                    element: document.getElementById("tappay-cvv"),
+                    placeholder: '後三碼'
+                }
+            },
+            styles: {
+                'input': {
+                    'color': 'gray'
+                },
+                'input.ccv': {
+                    'font-size': '15px',
+                    'display':'inline-block'
+                },
+                ':focus': {
+                    'color': 'green'
+                },
+                '.valid': {
+                    'color': 'green'
+                },
+                '.invalid': {
+                    'color': 'red'
+                },
+                '@media screen and (max-width: 400px)': {
+                    'input': {
+                        'color': 'orange'
+                    }
+                }
+            },
+            // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+            isMaskCreditCardNumber: true,
+            maskCreditCardNumberRange: {
+                beginIndex: 6, 
+                endIndex: 11
+            }
+        })
+
+        // listen for TapPay Field
+        TPDirect.card.onUpdate(function (update) {
+            /* Disable / enable submit button depend on update.canGetPrime  */
+            /* ============================================================ */
+
+            // update.canGetPrime === true
+            //     --> you can call TPDirect.card.getPrime()
+            // const submitButton = document.querySelector('button[type="submit"]')
+            if (update.canGetPrime) {
+                // // submitButton.removeAttribute('disabled')
+                // $('button[type="submit"]').removeAttr('disabled')
+                document.getElementById("submitPayment").removeAttribute("disabled")
+            } else {
+                // submitButton.setAttribute('disabled', true)
+                // $('button[type="submit"]').attr('disabled', true)
+                document.getElementById("submitPayment").setAttribute("disabled",true)
+            }
+
+
+            /* Change card type display when card type change */
+            /* ============================================== */
+
+            // cardTypes = ['visa', 'mastercard', ...]
+            var newType = update.cardType === 'unknown' ? '' : update.cardType
+            $('#cardtype').text(newType)
+
+
+
+            /* Change form-group style when tappay field status change */
+            /* ======================================================= */
+
+            // number 欄位是錯誤的
+            if (update.status.number === 2) {
+                setNumberFormGroupToError('.card-number-group')
+            } else if (update.status.number === 0) {
+                setNumberFormGroupToSuccess('.card-number-group')
+            } else {
+                setNumberFormGroupToNormal('.card-number-group')
+            }
+
+            if (update.status.expiry === 2) {
+                setNumberFormGroupToError('.expiration-date-group')
+            } else if (update.status.expiry === 0) {
+                setNumberFormGroupToSuccess('.expiration-date-group')
+            } else {
+                setNumberFormGroupToNormal('.expiration-date-group')
+            }
+
+            if (update.status.ccv === 2) {
+                setNumberFormGroupToError('.ccv-group')
+            } else if (update.status.ccv === 0) {
+                setNumberFormGroupToSuccess('.ccv-group')
+            } else {
+                setNumberFormGroupToNormal('.ccv-group')
+            }
+        })
+        $('form').on('submit', function (event) {
+            event.preventDefault()
+
+            console.log(TPDirect.card)
+            let userEmail=document.getElementById("userEmail").value
+            let userName=document.getElementById("userName").value
+            let userPhoneNumber=document.getElementById("userPhoneNumber").value
+            console.log(userName)
+            // 確認email格式是否正確
+            if (!userEmail.match(/^\w+@\w+\.\w+$/i)){
+                alert("email格式錯誤")
+                return
+            }
+            // 確認聯絡人姓名不為空
+            if(userName == ""){
+                alert("userName不可為空")
+                return
+            }
+            // 確認電話格式是否正確
+            let re=/^09[0-9]{8}$/
+            if(!re.test(userPhoneNumber)){
+                alert("電話格式錯誤")
+                return
+            }
+            let loadingWrapper=window.document.getElementById("loading-wrapper")
+            loadingWrapper.style.display="block"
+            // fix keyboard issue in iOS device
+            forceBlurIos()            
+            const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+            console.log(tappayStatus)
+            // Check TPDirect.card.getTappayFieldsStatus().canGetPrime before TPDirect.card.getPrime
+            if (tappayStatus.canGetPrime === false) {
+                loadingWrapper.style.display="none"
+                alert('can not get prime')
+                return
+            }
+            // Get prime
+            TPDirect.card.getPrime(function (result) {
+                if (result.status !== 0) {
+                    loadingWrapper.style.display="none"
+                    alert('get prime error ' + result.msg)
+                    return
+                }
+                // alert('get prime 成功，prime: ' + result.card.prime)
+                // send prime to server                
+                let requestBody={
+                    "prime":result.card.prime,
+                    "order":{
+                        "price":allPrice,
+                        "trip":orderIdList,
+                        "contact":{
+                            "name":userName,
+                            "email":userEmail,
+                            "phone":userPhoneNumber
+                        }
+                    }
+                }
+                fetch("/api/orders",{
+                    headers: {'Content-Type': 'application/json'},
+                    method:"post",
+                    body:JSON.stringify(requestBody)
+                })
+                .then((res)=>res.json())
+                .then((data)=>{
+                    console.log(data)
+                    if("error" in data){
+                        console.log(data)
+                        loadingWrapper.style.display="none"
+                        alert(data["message"])
+                        somethingFadeout(4,loadingWrapper)
+                        loadingWrapper.style.display="none"
+                    }
+                    else{
+                        if(data["data"]["payment"]["status"]==0){
+                            url="/thankyou?number="+data["data"]["number"]
+                            location.href=url                            
+                        }else{
+                            loadingWrapper.style.display="none"
+                            console.log(data)
+                        }
+
+                    }
+                })
+            })
+        })
+
+        function setNumberFormGroupToError(selector) {
+            $(selector).addClass('has-error')
+            $(selector).removeClass('has-success')
+        }
+
+        function setNumberFormGroupToSuccess(selector) {
+            $(selector).removeClass('has-error')
+            $(selector).addClass('has-success')
+        }
+
+        function setNumberFormGroupToNormal(selector) {
+            $(selector).removeClass('has-error')
+            $(selector).removeClass('has-success')
+        }
+        
+        function forceBlurIos() {
+            if (!isIos()) {
+                return
+            }
+            var input = document.createElement('input')
+            input.setAttribute('type', 'text')
+            // Insert to active element to ensure scroll lands somewhere relevant
+            document.activeElement.prepend(input)
+            input.focus()
+            input.parentNode.removeChild(input)
+        }
+        function isIos() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+
+
+
+
+
+
+
+
+        // 登入頁面初始狀態取得
         async function init(){
             getMemberInfo()
             await getMemberOrderInfo()
+            let loadingWrapper=window.document.getElementById("loading-wrapper1")
+            somethingFadeout(0,3,loadingWrapper)
         }
+
+
+        // 將選定的element依照時間淡出("等待執行時間,"淡出過程的時間","所選定的element")
+        async function somethingFadeout(waitiTime,time,selectElement){ //單位都是秒
+            // let loadingWrapper=window.document.getElementById("loading-wrapper")
+            await window.setTimeout(function(){
+            let index=1
+            let cycleTime=time/500/1000
+            let loadingImage=window.setInterval(function(){
+                if(index<=0){
+                    selectElement.style.display="none"
+                    window.clearInterval(loadingImage)
+                }
+                index=index-0.002
+                console.log(index)
+                selectElement.style.opacity=index
+            },cycleTime)
+            },waitiTime*1000)
+        }
+
+
+
+
         //網頁載入時取得會員資料
         function getMemberInfo(){
             fetch("/api/user/auth",{
@@ -115,6 +514,7 @@
                         let deleteIcon=window.document.createElement("div")
                         deleteIcon.setAttribute("class","deleteIcon")
                         deleteIcon.setAttribute("value",data["data"][i]["order_id"])
+                        orderIdList.push(data["data"][i]["order_id"])
                         deleteIcon.addEventListener("click",function(){
                             console.log(data["data"][i]["order_id"])
                             deleteBookingOrder(data["data"][i]["order_id"])
@@ -282,139 +682,8 @@
             }
         }
     </script>
-</head>
-<body style="color: #666666;" onload="init()">
-    <div id="backgroundFilter" class="backgroundFilter"></div>
-    <div id="loginLayout" class="loginLayout">
-        <div id="loginBox" class="loginBox" >
-            <div class="loginForm" id="loginForm">
-                <div class="loginTitle">
-                    會員登入帳號
-                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
-                </div>
-                <form id="loginInfoForm" class="loginInfoForm">
-                    <input id="inputEmail" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
-                    <input id="inputPassword" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
-                    <div>
-                        <input onclick="sendFormDataToLogin()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="登入帳戶" >
-                    </div>
-                </form>
-                <div class="loginEndText" onclick="registerAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">還沒有帳戶 ?<u> 點此註冊</u></div>
-                <div id="message" class="message"></div>
-
-            </div>
-        </div>
-    </div>
-    <div id="registerLayout" class="registerLayout">
-        <div id="registerBox" class="registerBox" >
-            <div class="registerForm" id="registerForm">
-                <div class="loginTitle">
-                    註冊會員帳號
-                    <div id="closeButton" class="closeButton" onclick="closeLoginWindow()"  onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><img src="/static/icon_close.png"></div>
-                </div>
-                <form id="loginInfoForm" class="loginInfoForm">
-                    <input id="inputNameRegister" class="inputEmailAndPassword" type="text" name="name" placeholder="  輸入姓名">
-                    <input id="inputEmailRegister" class="inputEmailAndPassword" type="text" name="email" placeholder="  輸入電子信箱">
-                    <input id="inputPasswordRegister" class="inputEmailAndPassword"  type="password" name="password" placeholder="  輸入密碼">
-                    <div>
-                        <input onclick="sendFormDataToRegisterAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)" class="inputSubmit" type="submit" name="email" placeholder="輸入電子信箱" value="註冊帳號" >
-                    </div>
-                </form>
-                <div class="loginEndText" onclick="returnToLoginPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)"><u>已有帳號，回到登入頁面</u></div>
-                <div id="messageRegister" class="message"></div>
-
-            </div>
-        </div>
-    </div>
-    <div class="box">
-        <div class="outsideTop"></div>
-        <div class="insideTop">
-            <div class="topLeft" onclick="toIndexPage()" onmousedown="mousedown(this)" onmouseup="mouseup(this)">台北一日遊</div>
-            <div class="topRight">
-                <div class="scheduld" onclick="directToBooking()">預定行程</div>
-                <div id="login" class="login" onclick="showloginBackground()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登入/註冊</div>
-                <div id="signOut" class="signOut" onclick="signOutAccount()" onmousedown="mousedown(this)" onmouseup="mouseup(this)" onmouseleave="mouseup(this)">登出</div>
-            </div>
-        </div>
-        <div class="outsideTop"></div>
-    </div>
-    <div class="wrapper">
-<!-- -------------分隔線中間為此頁面特別內容，其他為固定板型---------------- -->
-        <div id="bookingBox" class="bookingBox">
-            <div class="bookingContentBox">
-                <div class="bookingLeft"></div>
-                <div id="bookingMid" class="bookingMid">
-                    <!-- <div id="bookingAttractionInfo" class="bookingAttractionInfo">
-                        <div id="bookingTitle" class="bookingTitle"></div>
-
-
-                        <div id="bookingAttractionInfoDetail" class="bookingAttractionInfoDetail">
-                            <div id="bookingImage" class="bookingImage"></div>
-                            <div class="bookingAttractionInfoDetailText">
-                                <div>台北一日遊 : <span id="attractionName"></span></div>
-                                <div>日期 : <span id="attractionOrderDate"></span></div>
-                                <div>時間 : <span id="attractionOrderTime"></span></div>
-                                <div>費用 : <span id="attractionOrderPrice"></span></div>
-                                <div>地點 : <span id="attractionOrderAddress"></span></div>
-                            </div>
-                            <div class="bookingDeleteIcon" valus="景點id"><div class="deleteIcon"></div></div>
-                        </div>
-
-
-                    </div> -->
-                </div>
-                <div class="bookingRight"></div>
-            </div>
-            <div id="bookingMemberInfo" class="bookingMemberInfo">
-                <div class="bookingMemberInfoLeft"></div>
-                <div class="bookingMemberInfoMid">
-                    <div class="bookingMemberInfoTitle">您的聯絡資訊</div>
-                    <form style="margin-left: 10%;margin-right: 10%;">
-                        聯絡姓名 : <input style="padding: 5px;" type="text" width="100px"><br>
-                        聯絡信箱 : <input style="padding: 5px;" type="text" width="100px"><br>
-                        手機號碼 : <input style="padding: 5px;" type="text" width="100px"><br>
-                        <a>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</a>
-                    </form>
-                    <hr class="hrColor">
-                </div>
-                <div class="bookingMemberInfoRight"></div>
-            </div>
-            <div id="bookingCreditInfo" class="bookingMemberInfo">
-                <div class="bookingMemberInfoLeft"></div>
-                <div class="bookingMemberInfoMid">
-                    <div class="bookingCreditInfo">信用卡付款資訊</div>
-                    <form style="margin-left: 10%;margin-right: 10%;">
-                        卡片號碼 : <input style="padding: 5px;" type="password" width="100px" placeholder="**** **** **** ****"><br>
-                        過期時間 : <input style="padding: 5px;" type="text" width="100px" placeholder="MM/YY"><br>
-                        聯絡姓名 : <input style="padding: 5px;" type="text" width="100px" placeholder="CVV"><br>
-                    </form>
-                </div>
-                <div class="bookingMemberInfoRight"></div>
-            </div>
-            <hr id="hr1" class="hrColor">
-            <div id="bookingEndInfo" class="bookingEndInfo">
-                <div class="bookingMemberInfoLeft"></div>
-                <div class="bookingEndMid">
-                    <div></div>
-                    <div class="bookingEndMidInfo">
-                        <div>總金額 : <a id="allPriceText"></a></div>
-                        <div><input type="submit" value="確認訂購並付款" class="bookingSubmitButton"></div>
-                    </div>
-                </div>
-                <div class="bookingMemberInfoRight"></div>
-            </div>
 
 
 
-        </div>
-        
-
-
-<!-- ----------------------------- -->
-
-    </div>
-    <div class="footer" id="footer">
-        <div class="footerText">COPYRIGHT © 2021 台北一日遊</div>
-    </div>
 </body>
 </html>
