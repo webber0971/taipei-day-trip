@@ -15,7 +15,7 @@
             await showTappayNumberINwindow()
             setTimeout(function(){
                 // document.getElementById("loading-wrapper").style.display="block"
-            },4000)
+            },2000)
             let index=1
             let loadingWrapper=window.document.getElementById("loading-wrapper")
             let loadingImage=window.setInterval(function(){
@@ -25,7 +25,7 @@
                 }
                 index=index-0.002
                 loadingWrapper.style.opacity=index
-            },200)
+            },2)
             // await loadingWrapper.style.display="none"
         }
         // 取得queryString 中的訂單編號(number),並顯示在螢幕上
