@@ -10,6 +10,7 @@ import json
 import datetime
 import requests
 
+
 #載入&實例化jwt
 
 from flask_jwt_extended import create_access_token, jwt_required,set_access_cookies,decode_token,get_jwt_identity,unset_jwt_cookies,JWTManager,create_refresh_token,set_refresh_cookies
@@ -142,6 +143,7 @@ def login():
 			# set_access_cookies(resp,access_token,max_age=604800)
 			# set_refresh_cookies(resp,refresh_token)
 			resp.set_cookie(key="tokenUser",value=access_tokenUser,max_age=3600)
+
 			return resp,200
 		else:
 			errorInfo={"error": True,"message": "password is wrong , please try again"}
@@ -295,6 +297,7 @@ def getUnconfirmedItinerary():
 			mycursor.execute("use taipeiAttractions")
 			print("11")
 			sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where member_id = %s and paid is null"
+
 			val=id
 			print("22")
 			mycursor.execute(sql,(val,))
@@ -382,6 +385,7 @@ def buildNewItinerary():
 		# resp.delete_cookie(key="tokenUser")
 		errorInfo=jsonify({"error":True,"message":"伺服器錯誤"})
 		errorInfo.delete_cookie(key="tokenUser")
+
 		return errorInfo,500
 
 
