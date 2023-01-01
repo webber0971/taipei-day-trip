@@ -544,59 +544,71 @@ def orderToTappay():
 # 根據訂單編號取得訂單訊息，null表示沒有資料
 @app.get("/api/orders/<int:orderNumber>")
 def getOrderNumberInfo(orderNumber):
-	sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where paid = %s"
-	val=(orderNumber,)
-	connector=mydbPool.get_connection()
-	mycursor=connector.cursor()
-	mycursor.execute("use taipeiAttractions")
-	mycursor.execute(sql,val)
-	dataInfo=mycursor.fetchall()
+	try:
+		if(not request.cookies.__contains__("tokenUser")):
+			print("沒有cookie，名為tokenUser")
+			errorInfo={"error":True,"message":"請先登入帳號"}
+			return errorInfo,403
+		tokenUser=request.cookies["tokenUser"]
 
-	sql="select * from tappay_list where tappay_number = %s"
-	mycursor.execute(sql,val)
-	userInfo=mycursor.fetchone()
-	connector.commit()
-	mycursor.close()
-	connector.close()
-	# print(dataInfo)
-	print(userInfo)
-	print(len(dataInfo))
-	count=0
-	tripList=[]
-	price=0
-	# res.append
-	for i in dataInfo:
-		attractionName="attraction"+str(count)
-		imageUrl=i[20].split("https")
-		print("---------")
-		imageUrl1="https"+imageUrl[1]
-		cell={
-			attractionName:{
-				"id":i[0],
-				"name":i[10],
-				"address":i[25],
-				"image":imageUrl1,
-				"date":i[3].isoformat(),
-				"time":i[4]
+
+		sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where paid = %s"
+		val=(orderNumber,)
+		connector=mydbPool.get_connection()
+		mycursor=connector.cursor()
+		mycursor.execute("use taipeiAttractions")
+		mycursor.execute(sql,val)
+		dataInfo=mycursor.fetchall()
+
+		sql="select * from tappay_list where tappay_number = %s"
+		mycursor.execute(sql,val)
+		userInfo=mycursor.fetchone()
+		connector.commit()
+		mycursor.close()
+		connector.close()
+		# print(dataInfo)
+		print(userInfo)
+		print(len(dataInfo))
+		count=0
+		tripList=[]
+		price=0
+		# res.append
+		for i in dataInfo:
+			attractionName="attraction"+str(count)
+			imageUrl=i[20].split("https")
+			print("---------")
+			imageUrl1="https"+imageUrl[1]
+			cell={
+				attractionName:{
+					"id":i[0],
+					"name":i[10],
+					"address":i[25],
+					"image":imageUrl1,
+					"date":i[3].isoformat(),
+					"time":i[4]
+				}
 			}
+			count=count+1
+			tripList.append(cell)
+			price=price+i[5]
+			print(cell)
+		res={
+			"number":orderNumber,
+			"price":price,
+			"trip":tripList,
+			"contact":{
+				"name":userInfo[1],
+				"email":userInfo[6],
+				"phone":userInfo[7]
+			},
+			"status":userInfo[4]
 		}
-		count=count+1
-		tripList.append(cell)
-		price=price+i[5]
-		print(cell)
-	res={
-		"number":orderNumber,
-		"price":price,
-		"trip":tripList,
-		"contact":{
-			"name":userInfo[1],
-			"email":userInfo[6],
-			"phone":userInfo[7]
-		},
-		"status":userInfo[4]
-	}
 
-	return {"data":res},600
+		return {"data":res},200
+	except:
+		return "伺服器發生錯誤",403
+
+
 
 
 app.run(host="0.0.0.0",port=8888)
