@@ -550,10 +550,16 @@ def getOrderNumberInfo(orderNumber):
 			errorInfo={"error":True,"message":"請先登入帳號"}
 			return errorInfo,403
 		tokenUser=request.cookies["tokenUser"]
+		try:
+			dataInCookie=decode_token(tokenUser)
+		except:
+			errorInfo=jsonify({"error":True,"message":"tokenUser過期，請重新登入"})
+			errorInfo.delete_cookie(key="tokenUser")
+			return errorInfo,404
 
-
-		sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where paid = %s"
-		val=(orderNumber,)
+		memberId=dataInCookie["data"]["id"]
+		sql="select * from orderList inner join taipeiAttractionsData on orderList.order_id = taipeiAttractionsData.id where paid = %s and member_id = %s"
+		val=(orderNumber,memberId)
 		connector=mydbPool.get_connection()
 		mycursor=connector.cursor()
 		mycursor.execute("use taipeiAttractions")
