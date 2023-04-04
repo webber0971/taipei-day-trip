@@ -29,7 +29,7 @@
 
 <h2 id ="Feature">Feature</h2>
 
-+ lazy loading、search
++ Lazy loading、Search
 
 ![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-home.gif)
 
@@ -38,7 +38,7 @@
 
 ![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-viewpoint.gif)
 
-+ booking(Third-Party TapPay SDK)
++ Booking(Third-Party TapPay SDK)
 
 ![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-order.gif)
 
