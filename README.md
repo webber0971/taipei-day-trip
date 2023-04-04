@@ -102,7 +102,7 @@
 <a href="https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0" target="_blank">RESTful API documentation</a>
 
 <h2 id ="Figma_Doc">Figma Doc</h2>
-<a href="https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j/Taipei-Trip-%E5%8F%B0%E5%8C%97%E4%B8%80%E6%97%A5%E9%81%8A-2.0?node-id=2-139" target="_blank">RESTful API documentation</a>
+<a href="https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j/Taipei-Trip-%E5%8F%B0%E5%8C%97%E4%B8%80%E6%97%A5%E9%81%8A-2.0?node-id=2-139" target="_blank">Link</a>
 
 <h2 id ="Contact">Contact</h2>
 李緯宸 (wei-chen li)
