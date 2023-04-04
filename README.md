@@ -5,10 +5,6 @@
   - (account : test@gmail.com , password : test)
   
 ![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-home.gif)
-![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-order.gif)
-![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-viewpoint.gif)
-![image](https://d3ce9biuqz84nv.cloudfront.net/68747470733a2f2f692e696d6775722e636f6d2f423033513137652e706e67.png)
-![image](https://d3ce9biuqz84nv.cloudfront.net/68747470733a2f2f692e696d6775722e636f6d2f58497a713762662e706e67.png)
 
 
   
@@ -18,14 +14,11 @@
 - [Cloud Services](#Cloud_Services)
 - [Backend Technique](#Backend_Technique)
   - [Key Points](#Key_Points)
-  - [Infrastructure](#Infrastructure)
   - [Environment](#Environment)
   - [Database](#Database)
   - [Database Schema](#Database_Schema)
   - [Networking](#Networking)
-  - [Unit Test](#Unit_Test)
 - [Frontend Technique](#Frontend_Technique)
-  - [css](#css)
 - [Cloud Services](#Cloud_Services)
 - [Version Control](#Version_Control)
 - [CICD](#CICD)
@@ -37,6 +30,7 @@
 <h2 id ="Feature">Feature</h2>
 
 + lazy loading、search
+
 ![image](https://d3ce9biuqz84nv.cloudfront.net/tdt-home.gif)
 
 
