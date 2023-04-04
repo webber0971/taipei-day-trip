@@ -2,6 +2,192 @@
 
 /* 首頁 */
 /* 設定html、body，可以使螢幕刷新時不會因為是否有出現下拉霸而伸縮 */
+
+.loading-wrapper{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 11111111111111111111111111111111111111111111111111111;
+}
+.thankPageInit{
+    background-color: white;
+    display: block;
+}
+.loading{
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    left: 50%;
+    top: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+}
+.la-line-scale,
+.la-line-scale > div {
+    position: relative;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+.la-line-scale {
+    display: block;
+    font-size: 0;
+    color: #fff;
+}
+.la-line-scale.la-dark {
+    color: #333;
+}
+.la-line-scale > div {
+    display: inline-block;
+    float: none;
+    background-color: currentColor;
+    border: 0 solid currentColor;
+}
+.la-line-scale {
+    width: 40px;
+    height: 32px;
+}
+.la-line-scale > div {
+    width: 4px;
+    height: 32px;
+    margin: 2px;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+    -webkit-animation: line-scale 1.2s infinite ease;
+       -moz-animation: line-scale 1.2s infinite ease;
+         -o-animation: line-scale 1.2s infinite ease;
+            animation: line-scale 1.2s infinite ease;
+}
+.la-line-scale > div:nth-child(1) {
+    -webkit-animation-delay: -1.2s;
+       -moz-animation-delay: -1.2s;
+         -o-animation-delay: -1.2s;
+            animation-delay: -1.2s;
+}
+.la-line-scale > div:nth-child(2) {
+    -webkit-animation-delay: -1.1s;
+       -moz-animation-delay: -1.1s;
+         -o-animation-delay: -1.1s;
+            animation-delay: -1.1s;
+}
+.la-line-scale > div:nth-child(3) {
+    -webkit-animation-delay: -1s;
+       -moz-animation-delay: -1s;
+         -o-animation-delay: -1s;
+            animation-delay: -1s;
+}
+.la-line-scale > div:nth-child(4) {
+    -webkit-animation-delay: -.9s;
+       -moz-animation-delay: -.9s;
+         -o-animation-delay: -.9s;
+            animation-delay: -.9s;
+}
+.la-line-scale > div:nth-child(5) {
+    -webkit-animation-delay: -.8s;
+       -moz-animation-delay: -.8s;
+         -o-animation-delay: -.8s;
+            animation-delay: -.8s;
+}
+.la-line-scale.la-sm {
+    width: 20px;
+    height: 16px;
+}
+.la-line-scale.la-sm > div {
+    width: 2px;
+    height: 16px;
+    margin: 1px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.la-line-scale.la-2x {
+    width: 80px;
+    height: 64px;
+}
+.la-line-scale.la-2x > div {
+    width: 8px;
+    height: 64px;
+    margin: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.la-line-scale.la-3x {
+    width: 120px;
+    height: 96px;
+}
+.la-line-scale.la-3x > div {
+    width: 12px;
+    height: 96px;
+    margin: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+/*
+ * Animation
+ */
+@-webkit-keyframes line-scale {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(.4);
+                transform: scaleY(.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1);
+                transform: scaleY(1);
+    }
+}
+@-moz-keyframes line-scale {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(.4);
+           -moz-transform: scaleY(.4);
+                transform: scaleY(.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1);
+           -moz-transform: scaleY(1);
+                transform: scaleY(1);
+    }
+}
+@-o-keyframes line-scale {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(.4);
+             -o-transform: scaleY(.4);
+                transform: scaleY(.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1);
+             -o-transform: scaleY(1);
+                transform: scaleY(1);
+    }
+}
+@keyframes line-scale {
+    0%,
+    40%,
+    100% {
+        -webkit-transform: scaleY(.4);
+           -moz-transform: scaleY(.4);
+             -o-transform: scaleY(.4);
+                transform: scaleY(.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1);
+           -moz-transform: scaleY(1);
+             -o-transform: scaleY(1);
+                transform: scaleY(1);
+    }
+}
+
+
+
+
 html {
     height: 100%;
     margin: 1px;
@@ -69,6 +255,7 @@ body{
     /* background-color: #ffffff; */
     justify-content: center;  
     z-index: 10001;
+    cursor: pointer;
 }
 
 .loginBox{
@@ -90,10 +277,13 @@ body{
     align-content: center;
     justify-content: center;
     padding-top: 5px;
+    cursor: auto;
 }
 .closeButton{
     position: relative;
-    left:80px;    
+    left:80px;   
+    cursor: pointer;
+
 }
 .loginInfoForm{
     text-align: center;
@@ -115,11 +305,13 @@ body{
     background-color: #448899;
     color: white;
     border: none;
+    cursor: pointer;
 }
 .loginEndText{
     display: flex;
     align-content: center;
     justify-content: center;
+    cursor: pointer;
 }
 .message{
     display: flex;
@@ -169,6 +361,7 @@ body{
     font-size: 30px;
     color:#448899;
     text-align: left;
+    cursor: pointer;
 }
 .topRight{
     display: flex;
@@ -180,11 +373,13 @@ body{
     display: inline-block;
     padding: 5px;
     color: #666666;
+    cursor: pointer;
 }
 .login{
     display: inline-block;
     padding: 5px;
     color: #666666;
+    cursor: pointer;
 }
 .scheduld{
     display: inline-block;
@@ -193,6 +388,7 @@ body{
     display: none;
     padding: 5px;
     color: #666666;
+    cursor: pointer;
 
 }
 /* 設定歡迎頁面及搜尋 */
@@ -241,6 +437,7 @@ body{
     height: 46px;
     border-top-right-radius:5px ;
     border-end-end-radius: 5px;
+    cursor:url(/static/click.png),pointer;
 
     /* border-radius: 5px;  */
     text-align: center ;
@@ -680,6 +877,20 @@ body{
 .bookingBox{
     width: 100%;
 }
+.bookingUserInfoInput{
+    padding: 5px;
+    width: 200px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    height: 20px;
+    /* height: 200px; */
+    margin: 2px;
+}
+.bookingUserInfoInput:focus{
+    outline: none;
+}
+
 .bookingEndInfo{
     margin-top: 20px;
     line-height: 2;
@@ -695,6 +906,7 @@ body{
 .bookingEndMidInfo{
     width: 200px;
 }
+
 .bookingSubmitButton{
     width: 173px;
     height: 36px;
